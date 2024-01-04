@@ -20,6 +20,9 @@ nz-layout {
 }
 
 .content {
-  height: 65vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
   display: grid;
 }

@@ -10,13 +10,14 @@ import { MessageService } from 'primeng/api';
 
 import { environment } from '../environments/environment'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
     importProvidersFrom(FormsModule, ReactiveFormsModule),
-    importProvidersFrom([BrowserAnimationsModule]),
+    importProvidersFrom([BrowserAnimationsModule, FlexLayoutModule]),
     MessageService,
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.siteKey },
   ]

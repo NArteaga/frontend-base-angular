@@ -1,10 +1,10 @@
-<p-card styleClass="h-screen bg-[url('assets/img/background.jpg')] bg-cover rounded-none">
-  <ng-template pTemplate="header">
-    <navbar-component/>
-  </ng-template>
-  <ng-template pTemplate="content" class="content">
-    <div class="content lex justify-center items-center size-full">
-      <router-outlet></router-outlet>
-    </div>
-  </ng-template>
-</p-card>
+<div>
+  <div class="content flex justify-center items-center w-full">
+    <router-outlet></router-outlet>
+  </div>
+  <p-card styleClass="content h-screen bg-[url('assets/img/background.jpg')] bg-cover rounded-none">
+    <ng-template pTemplate="header">
+      <navbar-component/>
+    </ng-template>
+  </p-card>
+</div>

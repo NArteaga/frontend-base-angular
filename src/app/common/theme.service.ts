@@ -1,29 +1,28 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, inject, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common'
+import { CookiesService } from './cookies.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
+  store = inject(CookiesService)
 
   constructor(
     @Inject(DOCUMENT) private document: Document
   ) {}
 
   changeMode = () => {
-    let themeAction = localStorage.getItem('theme')
+    let themeAction = this.store.getItem('theme')
     themeAction = themeAction === 'light'? 'dark' : 'light';
-    localStorage.setItem('theme', themeAction);
+    this.store.setItem('theme', themeAction);
     const theme = this.document.getElementById('app-theme') as HTMLLinkElement;
     if (theme) theme.href = `${themeAction}.css`
   }
 
   getTheme = () => {
-    if (localStorage) {
-      const themeAction = localStorage.getItem('theme')
-      const theme = this.document.getElementById('app-theme') as HTMLLinkElement;
-      if (theme) theme.href = `${themeAction}.css`
-    }
-    //console.log(window.localStorage.getItem('theme'))
+    const themeAction = this.store.getItem('theme')
+    const theme = this.document.getElementById('app-theme') as HTMLLinkElement;
+    if (theme) theme.href = `${themeAction}.css`
   }
 }

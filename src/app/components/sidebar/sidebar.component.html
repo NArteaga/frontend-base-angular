@@ -1,0 +1,19 @@
+<div class="text-center grid">
+  <div class="col-12 flex justify-center pb-4">
+    <p-avatar [label]="title[0]" styleClass="mr-2" size="xlarge" [style]="{ 'background-color': '#4caf4f', color: '#ffffff' }" shape="circle"></p-avatar>
+  </div>
+  <span class="text-lg col-12 p-0 font-bold">{{ title }}</span>
+  <span class="text-sm col-12">{{ subTitle }}</span>
+</div>
+<p-divider></p-divider>
+<p-tree
+  styleClass="border-0 p-0 rounded-none"
+  [filter]="true"
+  filterPlaceholder="Busqueda Menu"
+  [value]="menus"
+  [(selection)]="selectedNode"
+  selectionMode="single"
+  (onNodeSelect)="nodeSelect($event)"
+  (onNodeUnselect)="nodeSelect($event)"
+>
+</p-tree>

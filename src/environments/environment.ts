@@ -5,5 +5,6 @@ export const environment = {
     socket: 'http://localhost:3005',
     frontend: 'http://localhost:4200',
   },
-  siteKey: '6LdLbvgZAAAAAEiR2Njf08-NrUwuUOwNdAJLolt5'
+  siteKey: '6LdLbvgZAAAAAEiR2Njf08-NrUwuUOwNdAJLolt5',
+  prefix: 'sisger'
 };

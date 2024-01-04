@@ -1,0 +1,46 @@
+<div class="flex">
+  @if (sidebarOpen && ['md'].includes(mediaQuery)) {
+    <p-card styleClass="w-80 h-screen rounded-none">
+      <sidebar-component />
+    </p-card>
+  }
+  @if (['lg', 'xl'].includes(mediaQuery)) {
+    <p-card styleClass="w-80 h-screen rounded-none">
+      <sidebar-component />
+    </p-card>
+  }
+  @if (sidebarOpen && ['sm', 'xs'].includes(mediaQuery)) {
+    <p-sidebar [(visible)]="sidebarOpen" [fullScreen]="true">
+      <sidebar-component />
+    </p-sidebar>
+  }
+  <div class="w-full h-screen">
+    <p-menubar styleClass="rounded-none py-2">
+      <ng-template pTemplate="start">
+        <div class="grid">
+          @if (['xs', 'sm', 'md'].includes(mediaQuery)) {
+            <div class="col">
+              <p-button icon="pi pi-th-large" [rounded]="true" (click)="toggleSidebar()"></p-button>
+            </div>
+          }
+          <div class="col flex items-center py-0">
+            <img src="assets/img/logoFNDR.png" height="50" class="mr-2" alt="logo FNDR" />
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="end">
+        <div class="grid">
+          <div class="col">
+            <p-button icon="pi pi-{{ theme }}" [rounded]="true" severity="secondary" (click)="changeTheme()"></p-button>
+          </div>
+          <div class="col">
+            <p-button icon="pi pi-user" [rounded]="true" severity="info" (click)="logout()"></p-button>
+          </div>
+        </div>
+      </ng-template>
+    </p-menubar>
+    <div class="bg-white w-full h-">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

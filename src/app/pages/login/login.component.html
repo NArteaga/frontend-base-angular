@@ -1,9 +1,9 @@
 <p-toast></p-toast>
-<p-card class="w-96 max-w-95vw grid text-center opacity-85" header="Sistema Gerencial">
+<p-card class="w-96 max-w-95vw grid text-center opacity-85">
   <form [formGroup]="form">
     <div class="card-content">
-      <p-divider></p-divider>
-      <div class="grid">
+      <h3 class="text-2xl font-bold m-1">Sistema Gerencial</h3>
+      <div class="grid p-2">
         <div class="col-12">
           <div class="flex flex-col gap-2 text-left">
             <label for="username">Usuario</label>
@@ -26,7 +26,6 @@
           </div>
         </div>
       </div>
-      <p-divider></p-divider>
       <p-button [icon]="loadingIcon"  [label]="loadingText" [raised]="true" (click)="auth()" [disabled]="loading"></p-button>
     </div>
   </form>

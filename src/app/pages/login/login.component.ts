@@ -1,5 +1,5 @@
 import { MessageService } from 'primeng/api';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -8,6 +8,9 @@ import { ButtonModule } from 'primeng/button'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { LoginService } from '../../service/login/login.service';
 import { ToastModule } from 'primeng/toast';
+import { StorageService } from '../../common/storage.service';
+import { CookiesService } from '../../common/cookies.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +27,7 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './login.component.scss',
   providers: [MessageService]
 })
-export class LoginPages {
+export class LoginPages implements OnInit {
   passwordSelect = true;
   passwordIcon = ''
   passwordType = 'password';
@@ -41,8 +44,17 @@ export class LoginPages {
   constructor(
     private recaptchaV3Service: ReCaptchaV3Service,
     private loginService: LoginService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private storage: StorageService,
+    private cookie: CookiesService,
+    private router: Router,
   ) {}
+
+  ngOnInit(): void {
+    const token = this.cookie.getItem('token');
+    console.log(token);
+    if (token) this.router.navigate(['/app']);
+  }
 
   change = () => {
     this.passwordSelect = !this.passwordSelect;
@@ -54,9 +66,19 @@ export class LoginPages {
     this.loading = true;
     this.loadingIcon = 'pi pi-spin pi-spinner';
     this.loadingText = '';
-    if (!this.form.valid) return;
+    if (!this.form.valid) {
+      this.loading = false;
+      this.loadingIcon = '';
+      this.loadingText = 'Iniciar Sesión';
+      return;
+    }
     const token = await this.recaptchaV3Service.execute('auth').pipe().toPromise()
-    if (!token) return
+    if (!token) {
+      this.loading = false;
+      this.loadingIcon = '';
+      this.loadingText = 'Iniciar Sesión';
+      return;
+    }
     const { error, result, type } = await this.loginService.login(this.form.value, token)
     const response = result || error
     if (type === 'error')
@@ -66,9 +88,21 @@ export class LoginPages {
         detail: response.mensaje,
         sticky: false,
       })
+
     this.loading = false;
     this.loadingIcon = '';
     this.loadingText = 'Iniciar Sesión';
-    console.log(response)
+    this.loadResponse(response)
+    this.router.navigate(['/app'])
+  }
+
+  loadResponse = (result: any) => {
+    this.storage.local.setItem('menu', result?.datos?.menus)
+    const permision: any = {}
+    result?.datos?.permisos.menus.map(((item: { ruta: string, rolMenu: Array<string>}) => {
+      permision[item.ruta] = item.rolMenu
+    }))
+    this.storage.local.setItem('permisos', permision)
+    this.cookie.setItem('usuario', result.datos.usuario)
   }
 }
