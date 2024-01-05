@@ -34,4 +34,17 @@ export class HttpService {
       return { error: message, result: null, type: 'error' };
     }
   }
+
+  query = (data: any) => {
+    const query = new Array<string>();
+    for (const key in data) {
+      if (!Array.isArray(data[key])) {
+        query.push(`${key}=${data[key]}`)
+        continue;
+      }
+      for (const value of data[key])
+        query.push(`${key}=${value}`)
+    }
+    return query.join('&')
+  }
 }

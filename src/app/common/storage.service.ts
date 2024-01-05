@@ -1,4 +1,4 @@
-import { Inject, Injectable, inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment'
 import { DOCUMENT } from '@angular/common';
 @Injectable({
@@ -38,7 +38,7 @@ export class StorageService {
   }
 
   session = {
-    setItem: (key: string, value: string) => {
+    setItem: (key: string, value: any) => {
       key = `${environment.prefix}-${key}`
       if (environment.production) {
         key = btoa(key)
@@ -54,7 +54,7 @@ export class StorageService {
       let value = this.sessionStorage?.getItem(key)
       if (!value) return null
       if (environment.production)
-        value = btoa(key)
+        value = atob(value)
       return JSON.parse(value)
     },
     removeItem: (key: string) => {

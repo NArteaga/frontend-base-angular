@@ -1,0 +1,137 @@
+<p-toast></p-toast>
+<p-card styleClass="p-1">
+  <p-fieldset styleClass="w-full">
+    <ng-template pTemplate="header">
+      <div class="flex items-center">
+        <i [class]="icon" class="text-xl p-2"></i>
+        <h4 class="m-0 p-2">{{title}}</h4>
+      </div>
+    </ng-template>
+    <div class="grid w-full">
+      <div class="col-12 flex justify-{{ ['xs', 'sm'].includes(mediaQuery) ? 'center' : 'end'}}">
+        <div class="grid">
+          @if (['xs', 'sm'].includes(mediaQuery)) {
+            <div class="col">
+              <p-button icon="pi pi-search" severity="info" (click)="openFilter = !openFilter"></p-button>
+            </div>
+          }
+          <div class="col">
+            <p-button icon="pi pi-history" (click)="refresh()"></p-button>
+          </div>
+          <div class="col">
+            <p-button icon="pi pi-plus"></p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if((['xs', 'sm'].includes(mediaQuery) && openFilter) || !['xs', 'sm'].includes(mediaQuery)) {
+      <div class="grid w-full">
+        <div class="col-12 w-full flex justify-center">
+          <form [formGroup]="form">
+            <div class="grid">
+              <div class="col-12 md:col-4 lg:col-4 xl:col-4">
+                <label for="nombre">Nombre del Proyecto</label>
+                <input id="nombre" type="text" (input)="filterEvent()" pInputText placeholder="Buscar Nombre del Proyecto" class="w-full" formControlName="nombre" />
+              </div>
+              <div class="col-12 md:col-4 lg:col-4 xl:col-4">
+                <label for="palabraClave">Palabras Clave</label>
+                <p-chips id="palabraClave" (ngModelChange)="filterEvent()" placeholder="Buscar Palabras Clave" styleClass="w-full" formControlName="palabraClave"></p-chips>
+              </div>
+              <div class="col-12 md:col-4 lg:col-4 xl:col-4">
+                <label for="estado">Estado del Proyecto</label>
+                <p-dropdown (onChange)="filterEvent()" id="estado" [options]="tipo" optionLabel="name" optionValue="code" [showClear]="true" placeholder="Estado del Proyecto" styleClass="w-full" formControlName="estado"></p-dropdown>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+    <div class="grid grid-nogutter">
+      @if (proyectos.length === 0) {
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+        <div class="col-12 text-center">
+          <span class="text-base font-bold">No se encontraron registros</span>
+        </div>
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+      } @else {
+        <div class="col-12">
+          <p-divider></p-divider>
+        </div>
+        @for (proyecto of proyectos; track $index) {
+          <div class="col-12">
+            <div class="flex flex-col xl:flex-row xl:align-items-start gap-4">
+              <img class="w-9 sm:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round" [src]="proyecto.ruta[0]" alt="imagen proyecto" />
+              <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
+                <div class="flex flex-column align-items-center sm:align-items-start">
+                  <div class="text-xl font-bold text-900 text-center pb-3">{{ proyecto.nombre }}</div>
+                  <div class="pb-3">
+                    <p-tag [icon]="estados[proyecto.estado].icon" [value]="proyecto.estado" [severity]="estados[proyecto.estado].color"></p-tag>
+                  </div>
+                  @if (!['xs'].includes(mediaQuery)) {
+                    <span class="text-sm pb-3 truncate text-pretty h-15">{{proyecto.descripcion}}</span>
+                  }
+                  <span class="font-semibold pb-3">Palabras Clave: </span>
+
+                  <div class="grid">
+                    @for (item of proyecto.palabraClave; track $index) {
+                      <div class="col">
+                        <p-tag [value]="item" severity="info" styleClass="w-15"></p-tag>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="flex md:flex-column align-items-center md:align-items-end gap-3 md:gap-2">
+                @if (proyecto.estado === 'SEGUIMIENTO') {
+                  <p-button icon="pi pi-save" class="md:align-self-end mb-2 p-button-rounded" severity="help"></p-button>
+                  @if (permisos.includes('CREAR')) {
+                    <p-button icon="pi pi-plus" class="md:align-self-end mb-2 p-button-rounded" severity="success"></p-button>
+                  }
+                  @if (permisos.includes('EDITAR')) {
+                    <p-button icon="pi pi-pencil" class="md:align-self-end mb-2 p-button-rounded" severity="warning"></p-button>
+                  }
+                }
+                @if (permisos.includes('VER')) {
+                  <p-button icon="pi pi-eye" class="md:align-self-end mb-2 p-button-rounded" severity="info"></p-button>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <p-divider></p-divider>
+          </div>
+        }
+      }
+    </div>
+    @if(['xs'].includes(mediaQuery)) {
+      <div class="grid">
+        <div class="col-12 flex justify-center items-center">
+          <span class="mx-1 text-color pr-3">Filas por pagina: </span>
+          <p-dropdown [options]="rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="controlPage.rows"></p-dropdown>
+        </div>
+        <div class="col-12">
+          <p-paginator [first]="row" [rows]="controlPage.rows" [totalRecords]="120" [showCurrentPageReport]="true"
+              currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
+        </div>
+      </div>
+    }
+    @if(!['xs'].includes(mediaQuery)) {
+      <div class="flex align-items-center justify-content-center md:justify-content-end lg:justify-content-end xl:justify-content-end">
+        <div class="pr-3">
+          <span class="mx-1 text-color">Filas por pagina: </span>
+        </div>
+        <div class="pr-3">
+          <p-dropdown [options]="rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="controlPage.rows" (ngModelChange)="resetear()"></p-dropdown>
+        </div>
+        <div class="pr-3">
+          <p-paginator [first]="row" [rows]="controlPage.rows" [totalRecords]="totalRecords" [showCurrentPageReport]="true"
+              currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
+        </div>
+      </div>
+    }
+  </p-fieldset>
+</p-card>

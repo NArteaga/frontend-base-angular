@@ -1,12 +1,16 @@
+import { GlobalService } from './../../common/global.service';
 import { SidebarModule } from 'primeng/sidebar';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CookiesService } from '../../common/cookies.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../../common/theme.service';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { TooltipModule } from 'primeng/tooltip';
+import { ToolbarModule } from 'primeng/toolbar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DataViewModule } from 'primeng/dataview';
 import { StorageService } from '../../common/storage.service';
 import { MediaChange, MediaObserver } from '@angular/flex-layout'
 import { Subscription, distinctUntilChanged } from 'rxjs';
@@ -14,7 +18,16 @@ import { Subscription, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'layout-main',
   standalone: true,
-  imports: [SidebarComponent, MenubarModule, ButtonModule, CardModule, SidebarModule],
+  imports: [
+    SidebarComponent,
+    ButtonModule,
+    CardModule,
+    SidebarModule,
+    TooltipModule,
+    DataViewModule,
+    ToolbarModule,
+    OverlayPanelModule,
+    RouterOutlet],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
@@ -29,7 +42,8 @@ export class MainLayout implements OnInit, OnDestroy {
     private cookie: CookiesService,
     private storage: StorageService,
     private router: Router,
-    private mediaObserver: MediaObserver
+    private mediaObserver: MediaObserver,
+    private global: GlobalService
   ) {
     this.theme = this.cookie.getItem('theme') === 'dark' ? 'moon' : 'sun';
   }
@@ -47,6 +61,7 @@ export class MainLayout implements OnInit, OnDestroy {
       )
       .subscribe((change) => {
         this.mediaQuery = change[0].mqAlias
+        this.global.setQuery(change[0].mqAlias)
       })
   }
 
@@ -61,7 +76,6 @@ export class MainLayout implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    console.log('logout');
     const theme = this.cookie.getItem('theme')
     this.cookie.clear()
     this.storage.local.clear()

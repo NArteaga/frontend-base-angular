@@ -21,7 +21,7 @@ export class ThemeService {
   }
 
   getTheme = () => {
-    const themeAction = this.store.getItem('theme')
+    const themeAction = this.store.getItem('theme') || 'light';
     const theme = this.document.getElementById('app-theme') as HTMLLinkElement;
     if (theme) theme.href = `${themeAction}.css`
   }

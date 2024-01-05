@@ -1,10 +1,10 @@
 <div class="flex">
   @if (sidebarOpen && ['md'].includes(mediaQuery)) {
-    <p-card styleClass="w-80 h-screen rounded-none">
+    <p-sidebar [(visible)]="sidebarOpen">
       <sidebar-component />
-    </p-card>
+    </p-sidebar>
   }
-  @if (['lg', 'xl'].includes(mediaQuery)) {
+  @if (sidebarOpen && ['lg', 'xl'].includes(mediaQuery)) {
     <p-card styleClass="w-80 h-screen rounded-none">
       <sidebar-component />
     </p-card>
@@ -15,14 +15,17 @@
     </p-sidebar>
   }
   <div class="w-full h-screen">
-    <p-menubar styleClass="rounded-none py-2">
+    <p-toolbar styleClass="rounded-none py-2 border-0">
       <ng-template pTemplate="start">
         <div class="grid">
-          @if (['xs', 'sm', 'md'].includes(mediaQuery)) {
-            <div class="col">
-              <p-button icon="pi pi-th-large" [rounded]="true" (click)="toggleSidebar()"></p-button>
-            </div>
-          }
+          <div class="col">
+            <p-button icon="pi pi-th-large" [pTooltip]="tooltipSideBar" tooltipPosition="bottom" [rounded]="true" (click)="toggleSidebar()"></p-button>
+            <ng-template #tooltipSideBar>
+              <div class="flex align-items-center">
+                <span>{{ sidebarOpen ? 'Cerrar Menu' : 'Abrir Menu' }}</span>
+              </div>
+            </ng-template>
+          </div>
           <div class="col flex items-center py-0">
             <img src="assets/img/logoFNDR.png" height="50" class="mr-2" alt="logo FNDR" />
           </div>
@@ -30,17 +33,58 @@
       </ng-template>
       <ng-template pTemplate="end">
         <div class="grid">
+          @if (!['xs'].includes(mediaQuery)) {
+            <div class="col">
+              <p-overlayPanel #op>
+                <ng-template pTemplate="content">
+                  <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones"></p-dataView>
+                </ng-template>
+              </p-overlayPanel>
+              <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [rounded]="true" severity="info" (click)="op.toggle($event)"></p-button>
+              <ng-template #tooltipNotify>
+                <div class="flex align-items-center">
+                  <span>Notificaciones</span>
+                </div>
+              </ng-template>
+            </div>
+          }
           <div class="col">
-            <p-button icon="pi pi-{{ theme }}" [rounded]="true" severity="secondary" (click)="changeTheme()"></p-button>
+            <p-button icon="pi pi-{{ theme }}" [pTooltip]="tooltipMode" tooltipPosition="bottom" [rounded]="true" severity="secondary" (click)="changeTheme()"></p-button>
+            <ng-template #tooltipMode>
+              <div class="flex align-items-center">
+                <span>{{ theme === 'sun' ? 'Modo Normal' : 'Modo Nocturno' }}</span>
+              </div>
+            </ng-template>
           </div>
           <div class="col">
-            <p-button icon="pi pi-user" [rounded]="true" severity="info" (click)="logout()"></p-button>
+            <p-button icon="pi pi-power-off" [pTooltip]="tooltipLogout" tooltipPosition="bottom" [rounded]="true" severity="danger" (click)="logout()">
+            </p-button>
+            <ng-template #tooltipLogout>
+              <div class="flex align-items-center">
+                <span>Cerrar Sesión</span>
+              </div>
+            </ng-template>
           </div>
         </div>
       </ng-template>
-    </p-menubar>
-    <div class="bg-white w-full h-">
+    </p-toolbar>
+    <div class="w-full p-3">
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
+@if (['xs'].includes(mediaQuery)) {
+  <div class="fixed bottom-2 right-2">
+    <p-overlayPanel #op>
+      <ng-template pTemplate="content">
+        <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones"></p-dataView>
+      </ng-template>
+    </p-overlayPanel>
+    <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [rounded]="true" severity="info" (click)="op.toggle($event)"></p-button>
+    <ng-template #tooltipNotify>
+      <div class="flex align-items-center">
+        <span>Notificaciones</span>
+      </div>
+    </ng-template>
+  </div>
+}

@@ -51,11 +51,11 @@ export class SidebarComponent  {
   }
 
   nodeSelect(event: any): void {
-    console.log(event)
     if (event.node.tipo === 'GRUPO_MENU') {
       event.node.expanded = !event.node.expanded
       return;
     }
+    this.storage.session.setItem('select', { title: event.node.label, icon: event.node.icon })
     this.router.navigate([event.node.path])
   }
 }

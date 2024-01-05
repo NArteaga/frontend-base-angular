@@ -19,4 +19,14 @@ export class LoginService {
       data
     })
   }
+
+  verificar() {
+    return this._http.execute({
+      method: 'GET',
+      url: '/auth/verificar',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 }
