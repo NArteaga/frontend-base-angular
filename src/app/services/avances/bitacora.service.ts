@@ -1,17 +1,27 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpService } from '../../common/http.service';
+import { HttpService } from '@common/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProyectoService {
+export class BitacoraService {
   private _http = inject(HttpService)
   constructor() { }
 
-  create(data: any) {
+  save (data: any) {
+    if (data?.id) {
+      const { id } = data
+      delete data.id
+      return this.update(data, id)
+    }
+    delete data.id
+    return this.create(data)
+  }
+
+  private create(data: any) {
     return this._http.execute({
       method: 'POST',
-      url: '/general/proyecto',
+      url: '/avances/bitacora',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -19,10 +29,10 @@ export class ProyectoService {
     })
   }
 
-  update(data: any, id: string) {
+  private update(data: any, id: string) {
     return this._http.execute({
       method: 'PATCH',
-      url: `/general/proyecto/${id}`,
+      url: `/avances/bitacora/${id}`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -33,7 +43,7 @@ export class ProyectoService {
   findAll(data: any) {
     return this._http.execute({
       method: 'GET',
-      url: `/general/proyecto?${this._http.query(data)}`,
+      url: `/avances/bitacora?${this._http.query(data)}`,
       headers: {
         'Content-Type': 'application/json'
       },

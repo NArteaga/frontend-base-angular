@@ -1,0 +1,171 @@
+<p-toast></p-toast>
+<div class="flex justify-{{ ['xs', 'sm'].includes(informacion.mediaQuery) ? 'center' : 'content-end'}}">
+  <div class="grid">
+    @if (['xs', 'sm'].includes(informacion.mediaQuery)) {
+      <div class="col">
+        <p-button icon="pi pi-search" severity="info" (click)="informacion.open.filter= !informacion.open.filter"></p-button>
+      </div>
+    }
+    <div class="col">
+      <p-button
+        icon="pi {{ informacion.loading ? 'pi-spin pi-spinner' : 'pi-history' }}"
+        (click)="refresh()"
+        [disabled]="informacion.loading"
+      ></p-button>
+    </div>
+    <div class="col">
+      <p-button icon="pi pi-plus" (click)="informacion.item = null; informacion.open.modify = true"></p-button>
+    </div>
+  </div>
+</div>
+@if((['xs', 'sm'].includes(informacion.mediaQuery) && informacion.open.filter) || !['xs', 'sm'].includes(informacion.mediaQuery)) {
+  <form [formGroup]="form" class="grid">
+    <div class="col-12 md:col-4 lg:col-4 xl:col-4">
+      <label for="nombre" class="font-bold">Nombre de la Bitacora</label>
+      <input id="nombre" type="text" (input)="filterEvent()" pInputText class="w-full" formControlName="nombre" />
+    </div>
+    <div class="col-12 md:col-4 lg:col-4 xl:col-4 p-fluid">
+      <label for="palabraClave" class="font-bold">Palabras Clave</label>
+      <p-chips
+        id="palabraClave"
+        (ngModelChange)="filterEvent()"
+        formControlName="palabraClave"
+        separator=","
+        oninput="event.target.value = event.target.value.toUpperCase()"
+      ></p-chips>
+    </div>
+    <div class="col-12 md:col-4 lg:col-4 xl:col-4">
+      <label for="estado" class="font-bold">Estado de la Bitacora</label>
+      <p-dropdown (onChange)="filterEvent()" id="estado" [options]="informacion.tipo" optionLabel="name" optionValue="code" [showClear]="true" styleClass="w-full" formControlName="estado"></p-dropdown>
+    </div>
+  </form>
+}
+<div class="grid grid-nogutter">
+  @if (informacion.bitacoras.length === 0) {
+    <div class="col-12">
+      <p-divider></p-divider>
+    </div>
+    <div class="col-12 text-center">
+      <span class="text-base font-bold">No se encontraron registros</span>
+    </div>
+    <div class="col-12">
+      <p-divider></p-divider>
+    </div>
+  } @else {
+    <div class="col-12">
+      <p-divider></p-divider>
+    </div>
+    @for (bitacora of informacion.bitacoras; track $index) {
+      <div class="col-12">
+        <div class="flex flex-col lg:flex-row lg:align-items-start gap-4">
+          <img class="w-9 sm:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round max-w-[300px]" [src]="bitacora.adjunto.path" alt="imagen bitacora" max/>
+          <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
+            <div class="flex flex-column align-items-center sm:align-items-start">
+              <div class="text-xl font-bold text-900 text-center pb-3">{{ bitacora.nombre }}</div>
+              <div class="pb-3">
+                <p-tag [icon]="informacion.estados[bitacora.estado].icon" [value]="bitacora.estado" [severity]="informacion.estados[bitacora.estado].color" (click)="cambiarEstado(bitacora)"></p-tag>
+              </div>
+              @if (!['xs'].includes(informacion.mediaQuery)) {
+                <p class="text-sm pb-3 truncate text-pretty text-justify h-15">{{bitacora.descripcion}}</p>
+              }
+              <span class="font-semibold pb-3">Palabras Clave: </span>
+              <div class="grid justify-center sm:justify-normal">
+                @for (item of bitacora.palabraClave; track $index) {
+                  <div class="col-fixed">
+                    <p-tag [value]="item" severity="info" ></p-tag>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 md:gap-2 justify-center">
+            @if (informacion.permisos.includes('VER')) {
+              <p-button icon="pi pi-eye" class="md:align-self-end mb-2 p-button-rounded" severity="info" (click)="selectDetalleBitacora(bitacora)"></p-button>
+            }
+            @if (bitacora.estado === 'SEGUIMIENTO') {
+              @if (informacion.permisos.includes('EDITAR')) {
+                <p-button icon="pi pi-pencil" class="md:align-self-end mb-2 p-button-rounded" severity="warning" (click)="selectBitacora(bitacora)"></p-button>
+              }
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <p-divider></p-divider>
+      </div>
+    }
+  }
+</div>
+<div class="pt-4"></div>
+@if(['xs'].includes(informacion.mediaQuery)) {
+  <div class="grid">
+    <div class="col-12 flex justify-center items-center">
+      <span class="mx-1 text-color pr-3">Filas por pagina: </span>
+      <p-dropdown [options]="informacion.rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="informacion.control.rows"></p-dropdown>
+    </div>
+    <div class="col-12">
+      <p-paginator [first]="informacion.row" [rows]="informacion.control.rows" [totalRecords]="120" [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
+    </div>
+  </div>
+}
+@if(!['xs'].includes(informacion.mediaQuery)) {
+  <div class="flex align-items-center justify-content-center md:justify-content-end lg:justify-content-end xl:justify-content-end">
+    <div class="pr-3">
+      <span class="mx-1 text-color">Filas por pagina: </span>
+    </div>
+    <div class="pr-3">
+      <p-dropdown [options]="informacion.rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="informacion.control.rows" (ngModelChange)="resetear()"></p-dropdown>
+    </div>
+    <div class="pr-3">
+      <p-paginator [first]="informacion.row" [rows]="informacion.control.rows" [totalRecords]="informacion.control.total" [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
+    </div>
+  </div>
+}
+<p-confirmDialog #cd>
+  <ng-template pTemplate="headless" let-message>
+    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+      <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="w-full flex justify-center mt-4">
+        <p-dropdown #item [options]="informacion.tipo" optionLabel="name" optionValue="code"  [(ngModel)]="informacion.estado"></p-dropdown>
+      </div>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+        <button pButton label="Cancelar" (click)="cd.reject()" class="p-button-outlined w-8rem p-button-danger"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+@if (informacion.open.modify) {
+  <p-dialog
+    header="{{ informacion.item? 'Editar' : 'Nueva' }} Bitacora"
+    [(visible)]="informacion.open.modify"
+    [modal]="true"
+    [responsive]="false"
+    [style]="{width: '600px', maxWidth: '95%'}"
+    [draggable]="false"
+    [maximizable]="true"
+    (visibleChange)="cancel()"
+  >
+    <bitacora-modal [value]="informacion.item" (cancel)="cancel()" (save)="save($event)"></bitacora-modal>
+  </p-dialog>
+}
+@if (informacion.open.modal) {
+  <p-dialog
+    header="Historial de la Bitacora"
+    [(visible)]="informacion.open.modal"
+    [modal]="true"
+    [responsive]="false"
+    [style]="{width: '600px', maxWidth: '95%'}"
+    [draggable]="false"
+    [maximizable]="true"
+    (visibleChange)="cancel()"
+  >
+    <detalle-modal [value]="informacion.item"></detalle-modal>
+  </p-dialog>
+}

@@ -6,11 +6,11 @@ import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext'
 import { ButtonModule } from 'primeng/button'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
-import { LoginService } from '../../service/login/login.service';
+import { LoginService } from '@services/login/login.service';
 import { ToastModule } from 'primeng/toast';
-import { StorageService } from '../../common/storage.service';
-import { CookiesService } from '../../common/cookies.service';
+import { StorageService } from '@common/storage.service';
 import { Router } from '@angular/router';
+import { GlobalService } from '@common/global.service';
 
 @Component({
   selector: 'app-login',
@@ -46,14 +46,14 @@ export class LoginPages implements OnInit {
     private loginService: LoginService,
     private messageService: MessageService,
     private storage: StorageService,
-    private cookie: CookiesService,
+    private global: GlobalService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    const token = this.cookie.getItem('token');
-    console.log(token);
+    const token = this.storage.local.getItem('token');
     if (token) this.router.navigate(['/app']);
+    this.global.logout()
   }
 
   change = () => {
@@ -63,6 +63,7 @@ export class LoginPages implements OnInit {
   }
 
   auth = async () => {
+
     this.loading = true;
     this.loadingIcon = 'pi pi-spin pi-spinner';
     this.loadingText = '';
@@ -79,6 +80,7 @@ export class LoginPages implements OnInit {
       this.loadingText = 'Iniciar Sesión';
       return;
     }
+    this.storage.local.setItem('username', this.form.value.usuario)
     const { error, result, type } = await this.loginService.login(this.form.value, token)
     const response = result || error
     if (type === 'error')
@@ -103,6 +105,6 @@ export class LoginPages implements OnInit {
       permision[item.ruta] = item.rolMenu
     }))
     this.storage.local.setItem('permisos', permision)
-    this.cookie.setItem('usuario', result.datos.usuario)
+    this.storage.local.setItem('usuario', result.datos.usuario)
   }
 }

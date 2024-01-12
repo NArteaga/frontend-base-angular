@@ -1,0 +1,328 @@
+<div class="flex flex-row align-items-start gap-4">
+  <img class="w-10rem shadow-2 block mx-auto border-round" [src]="value.adjunto.path" alt="imagen bitacora"/>
+  <div class="flex flex-row justify-content-between align-items-start flex-1">
+    <div class="flex flex-column align-items-start">
+      <div class="text-xl font-bold text-900 pb-3">{{ value.nombre }}</div>
+      <div class="pb-3">
+        <p-tag [icon]="informacion.estados[value.estado].icon" [value]="value.estado" [severity]="informacion.estados[value.estado].color"></p-tag>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pt-4">
+  <p-timeline [value]="detalles">
+    <ng-template pTemplate="marker" let-detalle>
+      @if (detalle.type === 'create') {
+        @if (informacion.event !== 'create') {
+          <p-button icon="pi pi-plus" [rounded]="true" severity="success" (click)="changeEvent('create')" styleClass="text-white mr-2"></p-button>
+        }
+        @if (informacion.event === 'create') {
+          <p-button icon="pi pi-times" [rounded]="true" severity="danger" (click)="eliminarPublicacion()" styleClass="text-white mr-2"></p-button>
+        }
+      } @else {
+        <p-avatar [label]="detalle?.funcionario?.nombres[0] || '-'" styleClass="mr-2 text-white bg-[#2196F3]" size="large" shape="circle"></p-avatar>
+      }
+    </ng-template>
+    <ng-template pTemplate="content" let-detalle>
+      @if (detalle.type === 'create' && informacion.event === 'create' && value.estado === 'SEGUIMIENTO') {
+          <p-card styleClass="mb-4 shadow-5 fadeinright animation-duration-500">
+            <form [formGroup]="form">
+              <div class="grid" #panelCreated>
+                <div class="col-12 p-fluid">
+                  <label for="nombre" class="font-bold required">Titulo</label>
+                  <input id="nombre" type="text" pInputText class="w-full" formControlName="aporte"/>
+                  @if (form.getError('required', 'aporte') && form.value.descripcion !== null) {
+                    <small id="palabraClave-help">El campo del titulo es requerido.</small>
+                  }
+                </div>
+                <div class="col-12 p-fluid">
+                  <p-button
+                    [label]="informacion.open.imagen ? 'Eliminar imagen' : 'Adicionar imagen'"
+                    (click)="informacion.open.imagen = !informacion.open.imagen"
+                    [text]="true">
+                  </p-button>
+                </div>
+                @if (informacion.open.imagen) {
+                  <div class="col-12 p-fluid">
+                    <label for="path" class="required font-bold">Imagen</label>
+                    <p-fileUpload
+                      mode="advanced"
+                      chooseLabel="Seleccionar imagenes"
+                      [showUploadButton]="false"
+                      [showCancelButton]="false"
+                      [customUpload]="true"
+                      (onSelect)="fileUpload($event)"
+                      accept="image/*"
+                      [maxFileSize]="105000000"
+                      id="path"
+                      styleClass="w-full"
+                    >
+                      <ng-template pTemplate="file">
+                        <div></div>
+                      </ng-template>
+                      <ng-template pTemplate="content" let-files>
+                        @if (files.length === 0) {
+                          <div class="w-full text-center">
+                            <i class="pi pi-download text-4xl w-full"></i>
+                            <span class="w-full font-bold">Subir imagen</span>
+                          </div>
+                        } @else {
+                          @for (file of files; track $index) {
+                            <div class="w-full flex justify-center">
+                              @if(informacion.image) {
+                                <img width="90%" class="max-w-[300px]" [src]="informacion.image" alt="imagen del detalle"/>
+                              } @else {
+                                <i class="pi pi-spin pi-spinner text-8xl"></i>
+                              }
+                            </div>
+                          }
+                        }
+                      </ng-template>
+                    </p-fileUpload>
+                  </div>
+                }
+                <div class="col-12 p-fluid">
+                  <label for="descripcion" class="required font-bold">Descripción</label>
+                  <textarea rows="5" pInputTextarea id="descripcion" class="w-full" formControlName="descripcion"></textarea>
+                  @if (form.getError('required', 'descripcion') && form.value.descripcion !== null) {
+                    <small id="palabraClave-help">El campo de descripcion es requerido.</small>
+                  }
+                </div>
+                <div class="col-12 p-fluid">
+                  <p-button
+                    [label]="informacion.open.adjunto ? 'Eliminar adjuntos' : 'Adicionar adjuntos'"
+                    (click)="informacion.open.adjunto = !informacion.open.adjunto"
+                    [text]="true">
+                  </p-button>
+                </div>
+                @if (informacion.open.adjunto) {
+                  <div class="col-12 p-fluid">
+                    <label for="path" class="required font-bold">Adjuntos</label>
+                    <p-fileUpload
+                      mode="advanced"
+                      chooseLabel="Seleccionar el ajuntos"
+                      [showUploadButton]="false"
+                      [showCancelButton]="false"
+                      [customUpload]="true"
+                      id="path"
+                      (onSelect)="upload($event)"
+                      [multiple]="true"
+                      styleClass="w-full"
+                    >
+                      <ng-template pTemplate="file">
+                        <div></div>
+                      </ng-template>
+                      <ng-template pTemplate="content" let-files>
+                        @if (files.length === 0) {
+                          <div class="w-full text-center">
+                            <i class="pi pi-download text-4xl w-full"></i>
+                            <span class="w-full font-bold">Subir adjunto</span>
+                          </div>
+                        } @else {
+                          @for (file of files; track $index) {
+                            <div class="w-full p-2">
+                              <div class="grid">
+                                <div class="col-fixed flex items-center">
+                                  <i class="pi pi-file text-4xl w-full"></i>
+                                </div>
+                                <div class="col">
+                                  <div class="w-full flex flex-col justify-content-between align-items-start flex-1">
+                                    <span class="w-full pb-2">{{ file.name }}</span>
+                                    <p-tag [value]="fileSize(file.size)" severity="warning" styleClass="p-1"></p-tag>
+                                    <div class="w-full p-fluid pt-2">
+                                      <p-button icon="pi pi-trash" label="Eliminar" severity="danger" size="small" (click)="remove($index, files)"></p-button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        }
+                      </ng-template>
+                    </p-fileUpload>
+                  </div>
+                }
+                <div class="col-12 p-fluid">
+                  <p-button label="Publicar" [raised]="true" (click)="publicar()"></p-button>
+                </div>
+              </div>
+            </form>
+          </p-card>
+      }
+      @if (detalle.type === 'update' && informacion.event === 'update' && value.estado === 'SEGUIMIENTO') {
+          <p-card styleClass="mb-4 shadow-5 fadeinright animation-duration-500">
+            <form [formGroup]="form">
+                <div class="grid" #panelUpdate>
+                  <div class="col-12 p-fluid">
+                    <label for="nombre" class="font-bold required">Titulo</label>
+                    <input id="nombre" type="text" pInputText class="w-full" formControlName="aporte"/>
+                  </div>
+                  <div class="col-12 p-fluid">
+                    <p-button
+                      [label]="informacion.open.imagen ? 'Eliminar imagen' : 'Adicionar imagen'"
+                      (click)="informacion.open.imagen = !informacion.open.imagen"
+                      [text]="true">
+                    </p-button>
+                  </div>
+                  @if (informacion.open.imagen) {
+                    <div class="col-12 p-fluid">
+                      <label for="path" class="required font-bold">Imagen</label>
+                      <p-fileUpload
+                        mode="advanced"
+                        chooseLabel="Seleccionar imagenes"
+                        [showUploadButton]="false"
+                        [showCancelButton]="false"
+                        [customUpload]="true"
+                        (onSelect)="fileUpload($event)"
+                        accept="image/*"
+                        [maxFileSize]="105000000"
+                        id="path"
+                        [files]="informacion.files"
+                        styleClass="w-full"
+                      >
+                        <ng-template pTemplate="file">
+                          <div></div>
+                        </ng-template>
+                        <ng-template pTemplate="content" let-files>
+                          @if (files.length === 0) {
+                            <div class="w-full text-center">
+                              <i class="pi pi-download text-4xl w-full"></i>
+                              <span class="w-full font-bold">Subir imagen</span>
+                            </div>
+                          } @else {
+                            @for (file of files; track $index) {
+                              <div class="w-full flex justify-center">
+                                @if(informacion.image) {
+                                  <img width="90%" class="max-w-[300px]" [src]="informacion.image" alt="imagen del detalle"/>
+                                } @else {
+                                  <i class="pi pi-spin pi-spinner text-8xl"></i>
+                                }
+                              </div>
+                            }
+                          }
+                        </ng-template>
+                      </p-fileUpload>
+                    </div>
+                  }
+                  <div class="col-12 p-fluid">
+                    <label for="descripcion" class="required font-bold">Descripción</label>
+                    <textarea rows="5" pInputTextarea id="descripcion" class="w-full" formControlName="descripcion"></textarea>
+                  </div>
+                  <div class="col-12 grid">
+                    @for (adjunto of detalle.adjuntos; track $index) {
+                      <div class="col-12">
+                        <p-toggleButton
+                          [onLabel]="adjunto.nombre"
+                          [offLabel]="adjunto.nombre"
+                          [onIcon]="'pi pi-times'"
+                          offIcon="pi pi-file"
+                          (onChange)="removeFile(adjunto)"
+
+                        >
+                        </p-toggleButton>
+                      </div>
+                    }
+                  </div>
+                  <div class="col-12 p-fluid">
+                    <p-button
+                      [label]="informacion.open.adjunto ? 'No adicionar nuevos adjuntos' : 'Adicionar adjuntos'"
+                      (click)="informacion.open.adjunto = !informacion.open.adjunto"
+                      [text]="true">
+                    </p-button>
+                  </div>
+                  @if (informacion.open.adjunto) {
+                    <div class="col-12 p-fluid">
+                      <label for="path" class="required font-bold">Adjuntos</label>
+                      <p-fileUpload
+                        mode="advanced"
+                        chooseLabel="Seleccionar el ajuntos"
+                        [showUploadButton]="false"
+                        [showCancelButton]="false"
+                        [customUpload]="true"
+                        id="path"
+                        [multiple]="true"
+                        (onSelect)="upload($event)"
+                        styleClass="w-full"
+                      >
+                        <ng-template pTemplate="file">
+                          <div></div>
+                        </ng-template>
+                        <ng-template pTemplate="content" let-files>
+                          @if (files.length === 0) {
+                            <div class="w-full text-center">
+                              <i class="pi pi-download text-4xl w-full"></i>
+                              <span class="w-full font-bold">Subir adjunto</span>
+                            </div>
+                          } @else {
+                            @for (file of files; track $index) {
+                              <div class="w-full">
+                                <div class="grid">
+                                  <div class="col-fixed flex items-center">
+                                    <i class="pi pi-file text-4xl w-full"></i>
+                                  </div>
+                                  <div class="col">
+                                    <div class="w-full flex flex-col justify-content-between align-items-start flex-1">
+                                      <span class="w-full">{{ file.name }}</span>
+                                      <p-tag [value]="fileSize(file.size)" severity="warning"></p-tag>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          }
+                        </ng-template>
+                      </p-fileUpload>
+                    </div>
+                  }
+                  <div class="col-12">
+                    <div class="grid">
+                      <div class="col p-fluid"><p-button label="Actualizar" [raised]="true" (click)="actualizarPublicar()" severity="warning"></p-button></div>
+                      <div class="col p-fluid"><p-button label="Cancelar" [raised]="true" (click)="eliminarPublicacion()" severity="danger" [outlined]="true"></p-button></div>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </p-card>
+      }
+      @if (!detalle.type) {
+        <p-card [header]="detalle?.aporte" [subheader]="nombreCompleto(detalle?.funcionario)" styleClass="mb-4 shadow-5 fadeinright animation-duration-500">
+          @if (detalle?.imagen) {
+            <div class="w-full flex justify-center pb-3">
+              <img [src]="detalle?.imagen?.path" alt="{{ detalle?.imagen?.nombre }}" width="80%" class="shadow-2 max-w-[300px]" />
+            </div>
+          }
+          <p class="text-sm m-0 p-card-subtitle">Fecha Creacion: {{ detalle.createdAt }}</p>
+          <p class="text-sm m-0 p-card-subtitle">Fecha Ultima Actualización: {{ detalle.updatedAt }}</p>
+          <p class="text-justify">{{ detalle.descripcion }}</p>
+          <div class="grid">
+            @for (adjunto of detalle.adjuntos; track $index) {
+              <div class="col-fixed">
+                <p-button [label]="adjunto.nombre" icon="pi pi-file" (click)="download(adjunto)"></p-button>
+              </div>
+            }
+          </div>
+          @if (informacion.identificador === detalle.funcionario?.id && value.estado === 'SEGUIMIENTO') {
+            <div class="p-fluid">
+              <p-button label="Modificar contenido" icon="pi pi-pencil" [raised]="true" (click)="changeEvent('update', detalles.indexOf(detalle))" severity="warning"></p-button>
+            </div>
+          }
+        </p-card>
+      }
+    </ng-template>
+  </p-timeline>
+</div>
+<p-confirmDialog #cd>
+  <ng-template pTemplate="headless" let-message>
+    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+      <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+        <button pButton label="Cancelar" (click)="cd.reject()" class="p-button-outlined w-8rem p-button-danger"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

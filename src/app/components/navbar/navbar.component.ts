@@ -1,8 +1,8 @@
-import { ThemeService } from './../../common/theme.service';
+import { ThemeService } from '@common/theme.service';
 import { Component, OnInit } from '@angular/core';
 import { ToolbarModule } from 'primeng/toolbar'
 import { ButtonModule } from 'primeng/button'
-import { CookiesService } from '../../common/cookies.service';
+import { StorageService } from '@common/storage.service';
 
 @Component({
   selector: 'navbar-component',
@@ -16,16 +16,16 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private themeService: ThemeService,
-    private cookie: CookiesService,
+    private storage: StorageService,
   ) {}
 
   ngOnInit(): void {
-    this.theme = this.cookie.getItem('theme') === 'dark' ? 'moon' : 'sun';
+    this.theme = this.storage.local.getItem('theme') === 'dark' ? 'moon' : 'sun';
   }
 
   changeTheme = () => {
     this.themeService.changeMode()
-    const theme = this.cookie.getItem('theme')
+    const theme = this.storage.local.getItem('theme')
     this.theme = theme === 'dark' ? 'moon' : 'sun'
   }
 }

@@ -1,10 +1,9 @@
-import { Component, AfterContentInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TreeModule } from 'primeng/tree';
-import { StorageService } from '../../common/storage.service'
+import { StorageService } from '@common/storage.service'
 import { Router } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
-import { CookiesService } from '../../common/cookies.service';
 
 @Component({
   selector: 'sidebar-component',
@@ -19,9 +18,9 @@ export class SidebarComponent  {
   selectedNode!: any
   title = ''
   subTitle = ''
+  @Output() selectNode: EventEmitter<any> = new EventEmitter()
   constructor(
     private storage: StorageService,
-    private cookie: CookiesService,
     private router: Router,
   ) {
     this.init()
@@ -30,8 +29,8 @@ export class SidebarComponent  {
   init(): void {
     try {
       const menu = this.storage.local.getItem('menu')
-      this.usuario = this.cookie.getItem('usuario')
-      this.title = [this?.usuario?.nombres, this?.usuario?.primerApellido, this?.usuario?.segundoApellido].join(' ')
+      this.usuario = this.storage.local.getItem('usuario')
+      this.title = this.nombreCompleto(this.usuario)
       this.subTitle = this.usuario.rol.nombre.toUpperCase()
       this.menus = menu?.map((item: { nombre: string, icon: string, childrens: Array<any>, tipo: string }, index: number) => ({
         key: `${item.tipo}-${index}`,
@@ -50,12 +49,21 @@ export class SidebarComponent  {
     } catch (error) {}
   }
 
+  nombreCompleto(usuario: any) {
+    const nombreCompleto = new Array<string>();
+    if (usuario?.nombres) nombreCompleto.push(usuario?.nombres)
+    if (usuario?.primerApellido) nombreCompleto.push(usuario?.primerApellido)
+    if (usuario?.segundoApellido) nombreCompleto.push(usuario?.segundoApellido)
+    return nombreCompleto.join(' ')
+  }
+
   nodeSelect(event: any): void {
     if (event.node.tipo === 'GRUPO_MENU') {
       event.node.expanded = !event.node.expanded
       return;
     }
-    this.storage.session.setItem('select', { title: event.node.label, icon: event.node.icon })
+    // this.storage.session.setItem('select', { title: event.node.label, icon: event.node.icon })
     this.router.navigate([event.node.path])
+    this.selectNode.emit(event.node)
   }
 }

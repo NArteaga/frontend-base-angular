@@ -1,21 +1,21 @@
 <div class="flex">
   @if (sidebarOpen && ['md'].includes(mediaQuery)) {
     <p-sidebar [(visible)]="sidebarOpen">
-      <sidebar-component />
+      <sidebar-component (selectNode)="changeContent($event); sidebarOpen = false"/>
     </p-sidebar>
   }
   @if (sidebarOpen && ['lg', 'xl'].includes(mediaQuery)) {
-    <p-card styleClass="w-80 h-screen rounded-none">
-      <sidebar-component />
+    <p-card styleClass="w-80 h-screen rounded-none fadeinleft animation-duration-300 sticky top-0 left-0">
+      <sidebar-component (selectNode)="changeContent($event)"/>
     </p-card>
   }
   @if (sidebarOpen && ['sm', 'xs'].includes(mediaQuery)) {
     <p-sidebar [(visible)]="sidebarOpen" [fullScreen]="true">
-      <sidebar-component />
+      <sidebar-component (selectNode)="changeContent($event); sidebarOpen = false"/>
     </p-sidebar>
   }
-  <div class="w-full h-screen">
-    <p-toolbar styleClass="rounded-none py-2 border-0">
+  <div class="p-fluid w-full min-h-screen">
+    <p-toolbar styleClass="rounded-none py-2 border-0 sticky top-0 z-10">
       <ng-template pTemplate="start">
         <div class="grid">
           <div class="col">
@@ -37,7 +37,23 @@
             <div class="col">
               <p-overlayPanel #op>
                 <ng-template pTemplate="content">
-                  <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones"></p-dataView>
+                  <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones" [value]="notify">
+                    <ng-template pTemplate="list" let-products>
+                      <div class="grid grid-nogutter">
+                        @for (item of products; track $index) {
+                          <div class="col-12">
+                            <span class="text-xl font-bold">{{ item.type }}: {{ item.title }}</span>
+                          </div>
+                          <div class="col-12">
+                            <span class="text-sm">{{ item.description }}</span>
+                          </div>
+                          <div class="col-12">
+                            <p-divider></p-divider>
+                          </div>
+                        }
+                      </div>
+                    </ng-template>
+                  </p-dataView>
                 </ng-template>
               </p-overlayPanel>
               <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [rounded]="true" severity="info" (click)="op.toggle($event)"></p-button>
@@ -69,15 +85,50 @@
       </ng-template>
     </p-toolbar>
     <div class="w-full p-3">
-      <router-outlet></router-outlet>
+      <p-card styleClass="p-0">
+        <p-fieldset styleClass="w-full">
+          <ng-template pTemplate="header">
+            <div class="flex items-center">
+              <i [class]="info.icon" class="text-xl p-2"></i>
+              <h4 class="m-0 p-2">{{info.title}}</h4>
+            </div>
+          </ng-template>
+          <router-outlet></router-outlet>
+        </p-fieldset>
+      </p-card>
     </div>
+    <p-toolbar styleClass="rounded-none py-2 border-0 bottom-0 z-10 h-[75px]">
+      <div class="flex flex-row items-center">
+        <img src="assets/img/logoFNDR.png" height="50" class="mr-2" alt="logo FNDR" />
+        <div class="flex flex-col">
+          <span class="font-bold text-sm">{{year}} © Desarrollado en el FNDR</span>
+          <span class="font-bold text-xs">Ministerio de Planificación del Desarrollo</span>
+        </div>
+      </div>
+    </p-toolbar>
   </div>
 </div>
 @if (['xs'].includes(mediaQuery)) {
   <div class="fixed bottom-2 right-2">
     <p-overlayPanel #op>
       <ng-template pTemplate="content">
-        <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones"></p-dataView>
+        <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones" [value]="notify">
+          <ng-template pTemplate="list" let-products>
+            <div class="grid grid-nogutter">
+              @for (item of products; track $index) {
+                <div class="col-12">
+                  <span class="text-base">{{ item.type }}: {{ item.title }}</span>
+                </div>
+                <div class="col-12">
+                  <span class="text-sm">{{ item.description }}</span>
+                </div>
+                <div class="col-12">
+                  <p-divider></p-divider>
+                </div>
+              }
+            </div>
+          </ng-template>
+        </p-dataView>
       </ng-template>
     </p-overlayPanel>
     <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [rounded]="true" severity="info" (click)="op.toggle($event)"></p-button>

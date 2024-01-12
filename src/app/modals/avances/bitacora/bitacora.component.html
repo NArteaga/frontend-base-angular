@@ -1,0 +1,109 @@
+<form [formGroup]="form">
+  <div class="col-12">
+    <label for="nombre" class="required font-bold">Nombre</label>
+    <input id="nombre" type="text" pInputText class="w-full disabled-input" formControlName="nombre"/>
+    @if (form.getError('required', 'nombre') && form.value.nombre !== null) {
+      <small id="nombre-help">El campo del nombre es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <label for="keywords" class="required font-bold">Palabras Claves</label><br/>
+    <small id="palabraClave-info">Presione la tecla enter para registrar la Palabra Clave.</small>
+    <p-chips
+      formControlName="palabraClave"
+      id="keywords"
+      styleClass="p-inputtext-sm"
+      separator=","
+      oninput="event.target.value = event.target.value.toUpperCase()"
+    ></p-chips>
+    @if (form.getError('required', 'palabraClave') && form.value.palabraClave !== null) {
+      <small id="palabraClave-help">El campo de palabras clave es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <label for="descripcion" class="required font-bold">Descripción</label>
+    <textarea rows="5" pInputTextarea formControlName="descripcion" id="descripcion" class="w-full"></textarea>
+    @if (form.getError('required', 'descripcion') && form.value.descripcion !== null) {
+      <small id="descripcion-help">El campo de la descripción es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <label for="path" class="required font-bold">Imagen</label>
+    <p-fileUpload
+      mode="advanced"
+      chooseLabel="Seleccionar imagenes"
+      [showUploadButton]="false"
+      [showCancelButton]="false"
+      [chooseStyleClass]="loading ? 'hidden' : ''"
+      [customUpload]="true"
+      [files]="files"
+      (onSelect)="fileUpload($event)"
+      accept="image/*"
+      [maxFileSize]="105000000"
+      id="path"
+      styleClass="w-full"
+    >
+      <ng-template pTemplate="file">
+        <div></div>
+      </ng-template>
+      <ng-template pTemplate="content" let-files>
+        @if (files.length === 0) {
+          <div class="w-full text-center">
+            <i class="pi pi-download text-4xl w-full"></i>
+            <span class="w-full font-bold">Subir imagen</span>
+          </div>
+        } @else {
+          @for (file of files; track $index) {
+            @if(image) {
+              <div class="flex flex-col xl:flex-row xl:align-items-start gap-4">
+                <div class="flex flex-col xl:flex-row xl:align-items-start gap-4">
+                  <img class="w-9 sm:w-5rem xl:w-15rem shadow-2 block xl:block mx-auto border-round" [src]="image.file" alt="imagen proyecto"/>
+                  <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
+                    <div class="flex flex-column align-items-center sm:align-items-start">
+                      <div class="font-bold text-900 pb-3 text-center sm:text-left" #name>{{ image.name }}</div>
+                      <div class="pb-3">
+                        <p-tag [value]="fileSize(file.size)" severity="warning"></p-tag>
+                      </div>
+                      <div class="pb-3">
+                        <p-overlayPanel #op>
+                          <ng-template pTemplate="content">
+                            <label for="nombre" class="required font-bold">Nombre</label>
+                            <input id="nombre" type="text" pInputText class="w-full disabled-input" #nameFile/>
+                            <div class="grid pt-3">
+                              <div class="col p-fluid">
+                                <p-button icon="pi pi-save" label="Guardar" severity="info" size="small" (click)="changeNameFiles(nameFile.value, op)"></p-button>
+                              </div>
+                              <div class="col p-fluid">
+                                <p-button icon="pi pi-times" label="Cancelar" severity="danger" size="small" (click)="op.hide()"></p-button>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-overlayPanel>
+                        <p-button icon="pi pi-pencil" [disabled]="loading" label="Cambiar el Nombre" severity="info" size="small" (click)="op.show($event, name)"></p-button>
+                      </div>
+                      <div>
+                        <p-button icon="pi pi-trash" [disabled]="loading" label="Eliminar" severity="danger" size="small" (click)="removeFiles(files, $index)"></p-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="w-full flex justify-center">
+                <i class="pi pi-spin pi-spinner text-8xl"></i>
+              </div>
+            }
+          }
+        }
+      </ng-template>
+    </p-fileUpload>
+  </div>
+  <div class="flex justify-end">
+    <div class="p-1">
+      <p-button label="Cancel" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="exit()"></p-button>
+    </div>
+    <div class="p-1">
+      <p-button label="Guardad" icon="pi pi-save" severity="success" [disabled]="loading" (click)="submit()"></p-button>
+    </div>
+  </div>
+</form>

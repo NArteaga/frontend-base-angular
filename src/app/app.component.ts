@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { RecaptchaV3Module } from 'ng-recaptcha';
-import { ThemeService } from './common/theme.service';
+import { ThemeService } from '@common/theme.service';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -15,9 +15,11 @@ import { ToastModule } from 'primeng/toast';
 export class AppComponent implements OnInit {
   title = 'sisger-frontend';
 
-  constructor(private theme: ThemeService) {}
+  constructor(
+    private theme: ThemeService,
+  ) {}
 
   ngOnInit(): void {
-    this.theme.getTheme();
+
   }
 }

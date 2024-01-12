@@ -1,0 +1,13 @@
+:host ::ng-deep {
+  .p-timeline-event-opposite {
+    display: none;
+  }
+  .p-timeline-event-content {
+    padding: 0;
+  }
+
+  .p-togglebutton.p-highlight {
+    background-color: var(--red-400);
+    border-color: var(--red-400);
+  }
+}

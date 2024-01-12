@@ -1,11 +1,13 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpService } from '../../common/http.service';
+import { GlobalService } from '@common/global.service';
+import { HttpService } from '@common/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   private _http = inject(HttpService)
+  private _global = inject(GlobalService)
   constructor() {}
 
   login(data: any, token: string) {
@@ -20,13 +22,14 @@ export class LoginService {
     })
   }
 
-  verificar() {
-    return this._http.execute({
+  async verificar() {
+    const value = await this._http.execute({
       method: 'GET',
       url: '/auth/verificar',
       headers: {
         'Content-Type': 'application/json'
       }
     })
+    return value
   }
 }
