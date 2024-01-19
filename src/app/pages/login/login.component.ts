@@ -7,10 +7,11 @@ import { InputTextModule } from 'primeng/inputtext'
 import { ButtonModule } from 'primeng/button'
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { LoginService } from '@services/login/login.service';
-import { ToastModule } from 'primeng/toast';
 import { StorageService } from '@common/storage.service';
 import { Router } from '@angular/router';
 import { GlobalService } from '@common/global.service';
+import { ToastModule } from 'primeng/toast';
+import { AutoFocusModule } from 'primeng/autofocus';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +23,13 @@ import { GlobalService } from '@common/global.service';
     ReactiveFormsModule,
     ButtonModule,
     ToastModule,
+    AutoFocusModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   providers: [MessageService]
 })
-export class LoginPages implements OnInit {
+export class LoginPage implements OnInit {
   passwordSelect = true;
   passwordIcon = ''
   passwordType = 'password';
@@ -63,7 +65,6 @@ export class LoginPages implements OnInit {
   }
 
   auth = async () => {
-
     this.loading = true;
     this.loadingIcon = 'pi pi-spin pi-spinner';
     this.loadingText = '';
@@ -83,28 +84,34 @@ export class LoginPages implements OnInit {
     this.storage.local.setItem('username', this.form.value.usuario)
     const { error, result, type } = await this.loginService.login(this.form.value, token)
     const response = result || error
-    if (type === 'error')
+    this.loading = false;
+    this.loadingIcon = '';
+    this.loadingText = 'Iniciar Sesión';
+    if (type === 'error') {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
         detail: response.mensaje,
         sticky: false,
       })
-
-    this.loading = false;
-    this.loadingIcon = '';
-    this.loadingText = 'Iniciar Sesión';
+      return
+    }
     this.loadResponse(response)
-    this.router.navigate(['/app'])
+    this.router.navigate(['/app/home'])
   }
 
   loadResponse = (result: any) => {
+    result.datos.menus = [
+      { icon: 'pi pi-home', nombre: 'Inicio', orden: 0, roles: [{ nombre: result.datos.permisos.nombre }], ruta: '/app/home', tipo: 'MENU' },
+      ...result.datos.menus
+    ]
     this.storage.local.setItem('menu', result?.datos?.menus)
     const permision: any = {}
-    result?.datos?.permisos.menus.map(((item: { ruta: string, rolMenu: Array<string>}) => {
+    result?.datos?.permisos?.menus.map(((item: { ruta: string, rolMenu: Array<string>}) => {
       permision[item.ruta] = item.rolMenu
     }))
+    permision['/app/home'] = ['VER']
     this.storage.local.setItem('permisos', permision)
-    this.storage.local.setItem('usuario', result.datos.usuario)
+    this.storage.local.setItem('usuario', result?.datos?.usuario)
   }
 }

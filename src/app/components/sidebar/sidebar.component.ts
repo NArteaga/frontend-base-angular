@@ -4,6 +4,7 @@ import { StorageService } from '@common/storage.service'
 import { Router } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
+import { GlobalService } from '@common/global.service';
 
 @Component({
   selector: 'sidebar-component',
@@ -22,9 +23,7 @@ export class SidebarComponent  {
   constructor(
     private storage: StorageService,
     private router: Router,
-  ) {
-    this.init()
-  }
+  ) { this.init() }
 
   init(): void {
     try {
@@ -32,12 +31,13 @@ export class SidebarComponent  {
       this.usuario = this.storage.local.getItem('usuario')
       this.title = this.nombreCompleto(this.usuario)
       this.subTitle = this.usuario.rol.nombre.toUpperCase()
-      this.menus = menu?.map((item: { nombre: string, icon: string, childrens: Array<any>, tipo: string }, index: number) => ({
+      this.menus = menu?.map((item: { nombre: string, icon: string, childrens: Array<any>, tipo: string, ruta?: string }, index: number) => ({
         key: `${item.tipo}-${index}`,
         tipo: item.tipo,
         label: item.nombre,
         icon: item.icon,
         expanded: true,
+        path: item.ruta,
         children: item.childrens?.map((child: any, subIndex: number) => ({
           key: `${child.tipo}-${index}-${subIndex}`,
           tipo: child.tipo,
@@ -62,7 +62,6 @@ export class SidebarComponent  {
       event.node.expanded = !event.node.expanded
       return;
     }
-    // this.storage.session.setItem('select', { title: event.node.label, icon: event.node.icon })
     this.router.navigate([event.node.path])
     this.selectNode.emit(event.node)
   }

@@ -14,6 +14,7 @@
       id="keywords"
       styleClass="p-inputtext-sm"
       separator=","
+      (onAdd)="addNuevaPalabraClave($event)"
       oninput="event.target.value = event.target.value.toUpperCase()"
     ></p-chips>
     @if (form.getError('required', 'palabraClave') && form.value.palabraClave !== null) {
@@ -103,7 +104,7 @@
       <p-button label="Cancel" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="exit()"></p-button>
     </div>
     <div class="p-1">
-      <p-button label="Guardad" icon="pi pi-save" severity="success" [disabled]="loading" (click)="submit()"></p-button>
+      <p-button label="Guarda" icon="pi pi-save" severity="success" [disabled]="loading" (click)="submit()"></p-button>
     </div>
   </div>
 </form>

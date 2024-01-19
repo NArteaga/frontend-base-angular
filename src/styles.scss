@@ -23,3 +23,15 @@ body {
   content:"* ";
   color: red;
 }
+
+host ::ng-deep {
+  .p-dropdown .p-overlay {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+  }
+  .p-dropdown .p-dropdown-panel {
+    min-width: none;
+    position: fixed;
+  }
+}

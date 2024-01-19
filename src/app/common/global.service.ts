@@ -1,16 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { StorageService } from './storage.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
-  private query: string = ''
+  private query = new BehaviorSubject('')
   private storage = inject(StorageService)
+  private select = new BehaviorSubject({ title: '', icon: '' })
+  select$ = this.select.asObservable()
+  query$ = this.query.asObservable()
+
   constructor() { }
-  setQuery = (query: string) => this.query = query
-  getQuery = () => this.query
+
+  setQuery = (query: string) => this.query.next(query);
+  changeSelect = (select: { title: '', icon: '' }) => this.select.next(select);
 
   loading = (form: FormGroup, state: boolean) => {
     for (const key in form.controls)
@@ -18,6 +24,7 @@ export class GlobalService {
       else form.get(key)?.disable()
     return { form, state }
   }
+
 
   logout(): void {
     const theme = this.storage.local.getItem('theme')

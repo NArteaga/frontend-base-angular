@@ -1,4 +1,3 @@
-<p-toast></p-toast>
 <div class="flex justify-{{ ['xs', 'sm'].includes(informacion.mediaQuery) ? 'center' : 'content-end'}}">
   <div class="grid">
     @if (['xs', 'sm'].includes(informacion.mediaQuery)) {
@@ -30,6 +29,7 @@
         id="palabraClave"
         (ngModelChange)="filterEvent()"
         formControlName="palabraClave"
+        (onAdd)="addNuevaPalabraClave($event)"
         separator=","
         oninput="event.target.value = event.target.value.toUpperCase()"
       ></p-chips>
@@ -66,7 +66,7 @@
                 <p-tag [icon]="informacion.estados[bitacora.estado].icon" [value]="bitacora.estado" [severity]="informacion.estados[bitacora.estado].color" (click)="cambiarEstado(bitacora)"></p-tag>
               </div>
               @if (!['xs'].includes(informacion.mediaQuery)) {
-                <p class="text-sm pb-3 truncate text-pretty text-justify h-15">{{bitacora.descripcion}}</p>
+                <p class="text-sm pb-3 truncate text-pretty text-justify h-15 hyphens-auto h-[100px] text-ellipsis">{{bitacora.descripcion}}</p>
               }
               <span class="font-semibold pb-3">Palabras Clave: </span>
               <div class="grid justify-center sm:justify-normal">
@@ -96,33 +96,13 @@
     }
   }
 </div>
-<div class="pt-4"></div>
-@if(['xs'].includes(informacion.mediaQuery)) {
-  <div class="grid">
-    <div class="col-12 flex justify-center items-center">
-      <span class="mx-1 text-color pr-3">Filas por pagina: </span>
-      <p-dropdown [options]="informacion.rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="informacion.control.rows"></p-dropdown>
-    </div>
-    <div class="col-12">
-      <p-paginator [first]="informacion.row" [rows]="informacion.control.rows" [totalRecords]="120" [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
-    </div>
-  </div>
-}
-@if(!['xs'].includes(informacion.mediaQuery)) {
-  <div class="flex align-items-center justify-content-center md:justify-content-end lg:justify-content-end xl:justify-content-end">
-    <div class="pr-3">
-      <span class="mx-1 text-color">Filas por pagina: </span>
-    </div>
-    <div class="pr-3">
-      <p-dropdown [options]="informacion.rowsItem" optionLabel="label" optionValue="value" [(ngModel)]="informacion.control.rows" (ngModelChange)="resetear()"></p-dropdown>
-    </div>
-    <div class="pr-3">
-      <p-paginator [first]="informacion.row" [rows]="informacion.control.rows" [totalRecords]="informacion.control.total" [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} de {totalRecords}" [showPageLinks]="false" [showFirstLastIcon]="false" (onPageChange)="changePage($event)"></p-paginator>
-    </div>
-  </div>
-}
+<p-card styleClass="sticky bottom-0 z-10 rounded-none p-0">
+  <pagination-component
+    (changePage)="changePage($event)"
+    [total]="informacion.control.total"
+    [mediaQuery]="informacion.mediaQuery"
+  />
+</p-card>
 <p-confirmDialog #cd>
   <ng-template pTemplate="headless" let-message>
     <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
@@ -147,7 +127,7 @@
     [(visible)]="informacion.open.modify"
     [modal]="true"
     [responsive]="false"
-    [style]="{width: '600px', maxWidth: '95%'}"
+    [style]="{width: '600px', maxWidth: '100%'}"
     [draggable]="false"
     [maximizable]="true"
     (visibleChange)="cancel()"
@@ -161,7 +141,7 @@
     [(visible)]="informacion.open.modal"
     [modal]="true"
     [responsive]="false"
-    [style]="{width: '600px', maxWidth: '95%'}"
+    [style]="{width: '600px', maxWidth: '100%'}"
     [draggable]="false"
     [maximizable]="true"
     (visibleChange)="cancel()"

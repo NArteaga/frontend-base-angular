@@ -1,7 +1,5 @@
-import { resolve } from 'node:path';
 import { MenubarModule } from 'primeng/menubar';
-import { Component } from '@angular/core';
-import { FieldsetModule } from 'primeng/fieldset';
+import { Component, ViewChild } from '@angular/core';
 import { StorageService } from '@common/storage.service';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
@@ -18,13 +16,13 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MediaChange, MediaObserver } from '@angular/flex-layout'
 import { Subscription, distinctUntilChanged } from 'rxjs';
 import { BitacoraService } from '@services/avances/bitacora.service';
-import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ChipsModule } from 'primeng/chips';
 import { BitacoraModal } from '@modals/avances/bitacora/bitacora.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DetalleModal } from '@modals/avances/bitacora/detalle/detalle.component';
 import { estadoTipoBitacora, rowSelect, tipoBitacora } from '@common/constants/global.const'
+import { PaginationComponent } from '@components/pagination/pagination.component';
 
 @Component({
   selector: 'bitacora-page',
@@ -40,13 +38,12 @@ import { estadoTipoBitacora, rowSelect, tipoBitacora } from '@common/constants/g
     DividerModule,
     ReactiveFormsModule,
     PaginatorModule,
-    ToastModule,
     ChipsModule,
     DialogModule,
     BitacoraModal,
     DetalleModal,
     ConfirmDialogModule,
-
+    PaginationComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './bitacora.component.html',
@@ -59,8 +56,6 @@ export class BitacoraPage {
     tipo: tipoBitacora,
     bitacoras: new Array<any>(),
     control: { rows: 10, page: 0, total: 0 },
-    rowsItem: rowSelect,
-    row: 0,
     estados: estadoTipoBitacora,
     open: {
       filter: false,
@@ -74,18 +69,18 @@ export class BitacoraPage {
 
   form = new FormGroup({
     nombre: new FormControl(''),
-    palabraClave: new FormControl(''),
+    palabraClave: new FormControl<string[]>([]),
     estado: new FormControl(),
   })
 
   mediaSubcription!: Subscription
-
+  @ViewChild(PaginationComponent) pagination!: PaginationComponent
 
   ngOnDestroy(): void {
     this.mediaSubcription.unsubscribe()
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     const getAlias = (MediaChange: MediaChange[]) => MediaChange[0].mqAlias
     this.mediaSubcription = this.mediaObserver
       .asObservable()
@@ -109,11 +104,12 @@ export class BitacoraPage {
   ) {
     const permiso = this.storage.local.getItem('permisos')
     this.informacion.permisos = permiso[this.router.url].accion
+
   }
 
   filterEvent() {
     this.form.value.estado = this.form.value.estado || ''
-    this.findAll(this.informacion.control.rows, this.informacion.control.page, this.form.value)
+    this.pagination.reset({ value: this.informacion.control.rows });
   }
 
   async refresh() {
@@ -123,7 +119,6 @@ export class BitacoraPage {
   }
 
   resetear() {
-    this.informacion.row = 0
     this.informacion.control.page = 0
     this.findAll(this.informacion.control.rows, 0, this.form.value)
   }
@@ -132,6 +127,14 @@ export class BitacoraPage {
     this.informacion.control.page = event.page || 0
     this.informacion.control.rows = event.rows || 0
     this.findAll(event.rows, event.page, this.form.value)
+  }
+
+  addNuevaPalabraClave(event: any) {
+    if (!Array.isArray(this.form.value.palabraClave)) return
+    const contenido = [...this.form.value.palabraClave]
+    contenido.splice(-1, 1)
+    const nuevaPalabra = event.value.toUpperCase()
+    this.form.patchValue({ palabraClave: [...contenido, nuevaPalabra] })
   }
 
   findAll = async (limit: number = 0, page: number = 0, data: any = {}) => {

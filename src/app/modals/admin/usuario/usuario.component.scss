@@ -1,0 +1,7 @@
+:host ::ng-deep {
+  .p-dropdown .p-overlay {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+  }
+}

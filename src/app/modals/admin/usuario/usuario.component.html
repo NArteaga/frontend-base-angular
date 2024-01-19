@@ -1,0 +1,56 @@
+<form [formGroup]="form" class="grid m-0">
+  <div class="col-12">
+      <label for="usuario" class="required font-bold">Usuario</label>
+      <p-inputGroup>
+        <input id="usuario" type="text" (input)="action = false" pInputText class="w-full disabled-input" formControlName="usuario"/>
+        @if (!value?.id) {
+          <button type="button" pButton icon="pi pi-search" class="p-button-warning" (click)="searchUsuario()"></button>
+        }
+      </p-inputGroup>
+      @if (form.getError('required', 'usuario') && form.value.usuario !== null) {
+        <small id="usuario-help">El campo del usuario es requerido.</small>
+      }
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="unidad" class="required font-bold">Unidad</label>
+      <p-dropdown id="unidad" [options]="unidades" [showClear]="true" styleClass="w-full" formControlName="idUnidad" styleClass="max-w-full"></p-dropdown>
+      @if (form.getError('required', 'idUnidad') && form.value.idUnidad !== null) {
+        <small id="unidad-help">El campo de la unidad es requerido.</small>
+      }
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="rol" class="required font-bold">Rol</label>
+      <p-dropdown id="rol" [options]="roles" [showClear]="true" styleClass="w-full" formControlName="idRol"></p-dropdown>
+      @if (form.getError('required', 'idRol') && form.value.idRol !== null) {
+        <small id="rol-help">El campo del rol es requerido.</small>
+      }
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="nombres" class="required font-bold">Nombre</label>
+      <input id="nombres" type="text" pInputText class="w-full disabled-input" formControlName="nombres"/>
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="codigoLdap" class="required font-bold">Codigo</label>
+      <input id="codigoLdap" type="text" pInputText class="w-full disabled-input" formControlName="codigoLdap"/>
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="primerApellido" class="required font-bold">Primer Apellido</label>
+      <input id="primerApellido" type="text" pInputText class="w-full disabled-input" formControlName="primerApellido"/>
+  </div>
+  <div class="col-12 md:col-6">
+      <label for="segundoApellido" class="required font-bold">Segundo Apellido</label>
+      <input id="segundoApellido" type="text" pInputText class="w-full disabled-input" formControlName="segundoApellido"/>
+  </div>
+  <div class="col-12">
+      <label for="correo" class="required font-bold">Correo Institucional</label>
+      <input id="correo" type="text" pInputText class="w-full disabled-input" formControlName="correo"/>
+  </div>
+</form>
+<div class="flex justify-end">
+  <div class="p-1">
+    <p-button label="Cancel" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="eventCancel()"></p-button>
+  </div>
+  <div class="p-1">
+    <p-button label="Guarda" icon="pi pi-save" severity="success" [disabled]="loading" (click)="eventSave()"></p-button>
+  </div>
+</div>

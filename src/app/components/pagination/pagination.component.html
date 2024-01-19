@@ -1,0 +1,46 @@
+<p-card styleClass="sticky bottom-0 z-10 rounded-none shadow-none">
+  @if(['xs'].includes(mediaQuery)) {
+    <div class="grid">
+      <div class="col-12 flex justify-center items-center">
+        <span class="mx-1 text-color pr-3">Filas por pagina: </span>
+        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)"></p-dropdown>
+      </div>
+      <div class="col-12">
+        <p-paginator
+          [first]="row"
+          [rows]="limit"
+          [totalRecords]="total"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} de {totalRecords}"
+          [showPageLinks]="false"
+          [showFirstLastIcon]="false"
+          (onPageChange)="page($event)"
+        >
+        </p-paginator>
+      </div>
+    </div>
+  }
+  @if(!['xs'].includes(mediaQuery)) {
+    <div class="flex align-items-center justify-content-center md:justify-content-end lg:justify-content-end xl:justify-content-end">
+      <div class="pr-3">
+        <span class="mx-1 text-color">Filas por pagina: </span>
+      </div>
+      <div class="pr-3">
+        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)"></p-dropdown>
+      </div>
+      <div class="pr-3">
+        <p-paginator
+          [first]="row"
+          [rows]="limit"
+          [totalRecords]="total"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} de {totalRecords}"
+          [showPageLinks]="false"
+          [showFirstLastIcon]="false"
+          (onPageChange)="page($event)"
+        >
+        </p-paginator>
+      </div>
+    </div>
+  }
+</p-card>

@@ -1,0 +1,19 @@
+<form [formGroup]="form" class="grid">
+  @for (filter of filters; track $index)  {
+    <div class="{{filter.style}} p-fluid">
+      <label [for]="filter.control" class="font-bold">{{ filter.label }}</label>
+      @if (filter.type === 'text') {
+        <input [id]="filter.control" type="text" (input)="eventFilter()" pInputText class="w-full" [formControlName]="filter.control" />
+      }
+      @if (filter.type === 'select') {
+        <p-dropdown [id]="filter.control" (onChange)="eventFilter()" [options]="filter.options" [showClear]="true" styleClass="w-full" [formControlName]="filter.control"></p-dropdown>
+      }
+      @if (filter.type === 'chip') {
+        <p-chips [id]="filter.control" (ngModelChange)="eventFilter()" [formControlName]="filter.control" separator=","></p-chips>
+      }
+      @if (filter.type === 'number') {
+        <p-inputNumber inputId="integeronly" (onInput)="eventFilter()" [formControlName]="filter.control"></p-inputNumber>
+      }
+    </div>
+  }
+</form>

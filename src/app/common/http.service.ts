@@ -19,10 +19,17 @@ export class HttpService {
     }
   ) => {
     try {
+      axios({
+        method: ''
+      })
       if (!config.headers) config.headers = {}
-      config.url = `${environment.baseUrl.api}${config.url}`
+      let sendToken = false
+      if (!config.url.startsWith('http://') && !config.url.startsWith('https://')) {
+        config.url = `${environment.baseUrl.api}${config.url}`
+        sendToken = true
+      }
       const jwt = this.storage.local.getItem('token')
-      if (jwt) config.headers['Authorization'] = `Bearer ${jwt}`
+      if (jwt && sendToken) config.headers['Authorization'] = `Bearer ${jwt}`
       const result = await axios(config)
       if (!result?.data?.finalizado) return { error: result.data, result: null, type: 'error' };
       if (result?.data?.datos?.token) {
@@ -31,6 +38,7 @@ export class HttpService {
       }
       return { error: null, result: result.data, type: 'success' };
     } catch (error: any) {
+      console.log(error)
       const message = error?.response?.data || { mensaje: 'Error en la conexión' }
       return { error: message, result: null, type: 'error' };
     }

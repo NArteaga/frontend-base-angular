@@ -1,0 +1,32 @@
+<span class="text-xl font-bold">Bienvenido {{nombre}}</span>
+<div class="m-4"></div>
+<span class="font-bold">Servicios disponibles:</span>
+<span>{{mediaQuery}}</span>
+<div class="grid pt-4">
+  @for (menu of menus; track $index) {
+    <div class="col-12">
+      <p-carousel
+        [value]="menu.childrens"
+        [numVisible]="3"
+        [numScroll]="1"
+        [orientation]="mediaQuery === 'xs' ? 'vertical' : 'horizontal'"
+        [responsiveOptions]="responsive"
+        [verticalViewPortHeight]="'150px'"
+      >
+        <ng-template pTemplate="header">
+          <span class="font-bold">{{ menu.nombre }}</span>
+        </ng-template>
+        <ng-template pTemplate="item" let-child>
+          <div class="border-1 surface-border border-round m-2 text-center py-5 px-0 sm:px-3 cursor-pointer" (click)="redirect(child)">
+            <div class="mb-3">
+              <i [class]="child.icon" class="text-2xl md:text-4xl"></i>
+            </div>
+            <div>
+              <span class="text-base md:text-lg mb-1">{{ child.nombre }}</span>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+  }
+</div>

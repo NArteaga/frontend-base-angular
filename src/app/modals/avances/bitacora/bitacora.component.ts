@@ -36,9 +36,9 @@ export class BitacoraModal implements OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter()
   form = new FormGroup({
     id: new FormControl(undefined),
-    nombre: new FormControl({ value: undefined, disabled: false }, Validators.required),
-    palabraClave: new FormControl({ value: undefined, disabled: false }, Validators.required),
-    descripcion: new FormControl({ value: undefined, disabled: false }, Validators.required),
+    nombre: new FormControl<string | undefined>({ value: undefined, disabled: false }, Validators.required),
+    palabraClave: new FormControl<Array<string> | undefined>({ value: undefined, disabled: false }, Validators.required),
+    descripcion: new FormControl<string | undefined>({ value: undefined, disabled: false }, Validators.required),
   })
   files: any = []
 
@@ -47,9 +47,9 @@ export class BitacoraModal implements OnInit {
   ) {
     this.form = new FormGroup({
       id: new FormControl(undefined),
-      nombre: new FormControl({ value: undefined, disabled: false }, Validators.required),
-      palabraClave: new FormControl({ value: undefined, disabled: false }, Validators.required),
-      descripcion: new FormControl({ value: undefined, disabled: false }, Validators.required),
+      nombre: new FormControl<string | undefined>({ value: undefined, disabled: false }, Validators.required),
+      palabraClave: new FormControl<Array<string> | undefined>({ value: undefined, disabled: false }, Validators.required),
+      descripcion: new FormControl<string | undefined>({ value: undefined, disabled: false }, Validators.required),
     })
     if (this.value) {
       this.title = 'Editar'
@@ -61,9 +61,9 @@ export class BitacoraModal implements OnInit {
     this.image = { file: '', name: '' }
     this.form = new FormGroup({
       id: new FormControl(undefined),
-      nombre: new FormControl(undefined, Validators.required),
-      palabraClave: new FormControl(undefined, Validators.required),
-      descripcion: new FormControl(undefined, Validators.required),
+      nombre: new FormControl<string | undefined>(undefined, Validators.required),
+      palabraClave: new FormControl<Array<string> | undefined>(undefined, Validators.required),
+      descripcion: new FormControl<string | undefined>(undefined, Validators.required),
     })
     if (this.value) {
       this.title = 'Editar'
@@ -133,5 +133,12 @@ export class BitacoraModal implements OnInit {
     this.image.name = `${newName}.${ext}`
     this.changeImage = true
     op.hide()
+  }
+  addNuevaPalabraClave(event: any) {
+    if (!Array.isArray(this.form.value.palabraClave)) return
+    const contenido = [...this.form.value.palabraClave]
+    contenido.splice(-1, 1)
+    const nuevaPalabra = event.value.toUpperCase()
+    this.form.patchValue({ palabraClave: [...contenido, nuevaPalabra] })
   }
 }

@@ -1,0 +1,204 @@
+<form [formGroup]="form" class="grid m-0">
+  <div class="col-12">
+    <label for="nombre" class="required font-bold">Nombre</label>
+    <input id="nombre" type="text" pInputText class="w-full disabled-input" formControlName="nombre"/>
+    @if (form.getError('required', 'nombre') && form.value.nombre !== null) {
+      <small id="nombre-help">El campo del nombre es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <label for="descripcion" class="required font-bold">Descripción</label>
+    <textarea rows="5" pInputTextarea formControlName="descripcion" id="descripcion" class="w-full"></textarea>
+    @if (form.getError('required', 'descripcion') && form.value.descripcion !== null) {
+      <small id="descripcion-help">El campo de la descripción es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <p-accordion  dion class="w-full">
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <span class="flex align-items-center gap-2 w-full">
+            <i class="pi pi-sitemap text-xl"></i>
+            <span class="font-bold white-space-nowrap">Permisos Menus</span>
+          </span>
+        </ng-template>
+        @for (menu of list.menus; track $index) {
+          <p-inplace #inplace styleClass="flex flex-col">
+            <ng-template pTemplate="display" style="padding: 0;">
+              <div class="flex flex-wrap items-center gap-3">
+                <i class="{{ menu.icon }} text-2xl" pBadge [value]="menu?.rolMenu?.accion?.length || 0"></i>
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <div class="flex align-items-center gap-2">
+                    <i class="pi pi-link text-sm"></i>
+                    <span class="text-xs">{{ menu.ruta }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex flex-wrap p-2 items-center gap-3">
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <p-multiSelect
+                    [options]="options.menus"
+                    optionLabel="label"
+                    optionValue="value"
+                    [defaultLabel]="menu?.rolMenu?.accion"
+                    [filterFields]="menu?.rolMenu?.accion"
+                    #select
+                  ></p-multiSelect>
+                  <div class="grid">
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-save"
+                        severity="success"
+                        (click)="lists(select, inplace, $index, 'menus')"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-times"
+                        severity="danger"
+                        (click)="inplace.deactivate()"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-inplace>
+        }
+      </p-accordionTab>
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <span class="flex align-items-center gap-2 w-full">
+            <i class="pi pi-server text-xl"></i>
+            <span class="font-bold white-space-nowrap">Permisos Apis</span>
+          </span>
+        </ng-template>
+        @for (menu of list.apis; track $index) {
+          <p-inplace #inplace styleClass="flex flex-col">
+            <ng-template pTemplate="display" style="padding: 0;">
+              <div class="flex flex-wrap items-center gap-3">
+                <i class="pi pi-server text-2xl" pBadge [value]="menu?.rolMenu?.accion?.length || 0"></i>
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <div class="flex align-items-center gap-2">
+                    <i class="pi pi-link text-sm"></i>
+                    <span class="text-xs">{{ menu.ruta }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex flex-wrap p-2 items-center gap-3">
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <p-multiSelect
+                    [options]="options.apis"
+                    optionLabel="label"
+                    optionValue="value"
+                    [defaultLabel]="menu?.rolMenu?.accion"
+                    [filterFields]="menu?.rolMenu?.accion"
+                    #select
+                  ></p-multiSelect>
+                  <div class="grid">
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-save"
+                        severity="success"
+                        (click)="lists(select, inplace, $index, 'apis')"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-times"
+                        severity="danger"
+                        (click)="inplace.deactivate()"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-inplace>
+        }
+      </p-accordionTab>
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <span class="flex align-items-center gap-2 w-full">
+            <i class="pi pi-eye text-xl"></i>
+            <span class="font-bold white-space-nowrap">Permisos Vistas</span>
+          </span>
+        </ng-template>
+        @for (menu of list.views; track $index) {
+          <p-inplace #inplace styleClass="flex flex-col">
+            <ng-template pTemplate="display" style="padding: 0;">
+              <div class="flex flex-wrap items-center gap-3">
+                <i class="pi pi-image text-2xl" pBadge [value]="menu?.rolMenu?.accion?.length || 0"></i>
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <div class="flex align-items-center gap-2">
+                    <i class="pi pi-link text-sm"></i>
+                    <span class="text-xs">{{ menu.ruta }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex flex-wrap p-2 items-center gap-3">
+                <div class="flex-1 flex flex-column gap-2">
+                  <span class="font-bold">{{ menu.nombre }}</span>
+                  <p-multiSelect
+                    [options]="options.menus"
+                    optionLabel="label"
+                    optionValue="value"
+                    [defaultLabel]="menu?.rolMenu?.accion"
+                    #select
+                  ></p-multiSelect>
+                  <div class="grid">
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-save"
+                        severity="success"
+                        (click)="lists(select, inplace, $index, 'views')"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                    <div class="col-6 p-fluid">
+                      <p-button
+                        icon="pi pi-times"
+                        severity="danger"
+                        (click)="inplace.deactivate()"
+                        styleClass="w-full"
+                      >
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-inplace>
+        }
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+</form>
+<div class="flex justify-end">
+  <div class="p-1">
+    <p-button label="Cancel" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="eventCancel()"></p-button>
+  </div>
+  <div class="p-1">
+    <p-button label="Guarda" icon="pi pi-save" severity="success" [disabled]="loading" (click)="eventSave()"></p-button>
+  </div>
+</div>

@@ -41,10 +41,11 @@ export class MainLayout implements OnInit, OnDestroy {
   sidebarOpen = false;
   theme = 'sun'
   mediaSubcription!: Subscription
+  selectSubcription!: Subscription
   socketSubcription: Array<Subscription> = []
   mediaQuery: string = ''
   queryView = ['xs', 'sm', 'md', 'lg', 'xl']
-  info = { title: '', icon: '' }
+  info = { title: '404', icon: '404' }
   notify: Array<any> = []
 
   year = new Date().getFullYear()
@@ -58,24 +59,29 @@ export class MainLayout implements OnInit, OnDestroy {
     private socket: SocketService,
     private messageService: MessageService
   ) {
-    const menu = this.storage.local.getItem('menu')
-    const elements: Array<any> = []
-    for (const item of menu)
-      elements.push(...item.childrens)
-    const element = elements.find((item: any) => item.ruta === router.url)
-    this.info = { title: element?.nombre, icon: element?.icon }
     this.theme = this.storage.local.getItem('theme') === 'dark' ? 'moon' : 'sun';
   }
 
   ngOnDestroy(): void {
     this.mediaSubcription.unsubscribe()
+    this.selectSubcription.unsubscribe()
     for (const subscribe of this.socketSubcription)
       subscribe.unsubscribe()
   }
 
   ngOnInit(): void {
+    const menu = this.storage.local.getItem('menu')
+    const elements: Array<any> = []
+    for (const item of menu) {
+      if (item.tipo === 'GRUPO_MENU')
+        elements.push(...item.childrens)
+      if (item.tipo === 'MENU')
+        elements.push(item)
+    }
+    const element = elements.find((item: any) => item.ruta === this.router.url)
     this.themeService.getTheme();
     const getAlias = (MediaChange: MediaChange[]) => MediaChange[0].mqAlias
+    this.selectSubcription = this.global.select$.subscribe(result => this.info = result)
     this.mediaSubcription = this.mediaObserver
       .asObservable()
       .pipe(
@@ -92,7 +98,7 @@ export class MainLayout implements OnInit, OnDestroy {
           this.messageService.add({
             severity:'success',
             summary: 'Autentificación correcto',
-            detail: informacion.message
+            detail: informacion.message,
           })
         })
     )
@@ -112,6 +118,10 @@ export class MainLayout implements OnInit, OnDestroy {
           })
         })
     )
+    if (element)
+      this.info = { title: element?.nombre, icon: element?.icon }
+    else
+      this.info = { title: '404', icon: 'pi pi-spin pi-globe' }
   }
 
   toggleSidebar(): void {

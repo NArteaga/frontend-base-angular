@@ -1,0 +1,69 @@
+<crudtable-component
+  [columns]="columns"
+  [filters]="filters"
+  [items]="items"
+  [total]="total"
+  (add)="add()"
+  (change)="change($event)"
+  (refresh)="refresh($event)"
+  [action]="action"
+  [item]="item"
+>
+  <ng-template #action let-row  let-index="index">
+    <div class="grid">
+      <div class="col-12">
+        <p-button icon="pi pi-pencil" severity="warning" styleClass="text-white" (click)="modify(row)"></p-button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #item let-row let-index="index" let-column="column">
+    @if(column?.key === 'nombre') {
+      {{ row.nombre.toUpperCase() }}
+    }
+    @if(column?.key === 'descripcion') {
+      {{ row.descripcion }}
+    }
+    @if(column?.key === 'correo') {
+      {{ row.correo }}
+    }
+    @if(column?.key === 'estado') {
+      <div class="flex justify-center" pRipple>
+        <p-chip
+          [label]="row.estado"
+          icon="pi {{ row.estado === 'ACTIVO' ? 'pi-verified' : 'pi-times-circle' }}"
+          styleClass="{{ row.estado === 'ACTIVO' ?  'bg-[var(--green-400)]' : 'bg-[var(--red-400)]' }} text-white cursor-pointer"
+          (click)="changeEstado(row)"
+        ></p-chip>
+      </div>
+    }
+  </ng-template>
+</crudtable-component>
+<p-confirmDialog #cd styleClass="w-[360px] max-w-full">
+  <ng-template pTemplate="headless" let-message>
+    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+      <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4 text-center">{{ message.header }}</span>
+      <p class="mb-0 text-justify">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+        <button pButton label="Cancelar" (click)="cd.reject()" class="p-button-outlined w-8rem p-button-danger"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
+@if (open.modify) {
+  <p-dialog
+    header="{{ select? 'Editar' : 'Nuevo' }} Rol"
+    [(visible)]="open.modify"
+    [modal]="true"
+    [responsive]="false"
+    [style]="{width: '600px', maxWidth: '100%'}"
+    [draggable]="false"
+    [maximizable]="true"
+    (visibleChange)="cancel()"
+  >
+    <rol-modal [value]="select" (cancel)="cancel()" (save)="save($event)"/>
+  </p-dialog>
+}

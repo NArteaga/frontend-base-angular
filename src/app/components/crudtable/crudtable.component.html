@@ -1,0 +1,131 @@
+<div class="w-full">
+  <div class="flex justify-{{ ['xs', 'sm'].includes(informacion.mediaQuery) ? 'center' : 'content-end'}}">
+    <div class="grid">
+      @if (
+        ['xs', 'sm'].includes(informacion.mediaQuery)
+        && filters
+        && filters.length > 0
+      ) {
+        <div class="col">
+          <p-button icon="pi pi-search" severity="info" (click)="informacion.open.filter= !informacion.open.filter"></p-button>
+        </div>
+      }
+      <div class="col">
+        <p-button
+          icon="pi {{ informacion.loading ? 'pi-spin pi-spinner' : 'pi-history' }}"
+          (click)="eventRefresh()"
+          [disabled]="informacion.loading"
+        ></p-button>
+      </div>
+      <div class="col">
+        <p-button icon="pi pi-plus" (click)="addRegister()"></p-button>
+      </div>
+    </div>
+  </div>
+  @if(
+    filters
+    && filters.length > 0
+    && (
+      (
+        ['xs', 'sm'].includes(informacion.mediaQuery)
+        && informacion.open.filter
+      )
+      || !['xs', 'sm'].includes(informacion.mediaQuery)
+    )
+  ) {
+    <filter-component [filters]="filters" (filter)="eventFilter($event)" />
+  }
+  <div class="grid">
+    <div class="col-12">
+      <p-divider></p-divider>
+    </div>
+    @if (items.length === 0) {
+      <div class="col-12 text-center">
+        <span class="text-base font-bold">No se encontraron registros</span>
+      </div>
+      <div class="col-12">
+        <p-divider></p-divider>
+      </div>
+    } @else {
+      <div class="col-12 max-w-full">
+      @if (content) {
+        @for (product of items; track $index) {
+          <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="context(product, { index: $index })"></ng-container>
+        }
+      } @else {
+        @if (!['xs', 'sm'].includes(informacion.mediaQuery)) {
+          <p-table [value]="items">
+            <ng-template pTemplate="header">
+              <tr class="max-w-full">
+                @if (!readonly && action) {
+                  <th>Acción</th>
+                }
+                @for (column of columns; track $index) {
+                  <th class="text-{{column.aling}}">{{column.label}}</th>
+                }
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-index="rowIndex">
+              <tr class="max-w-full">
+                @if (!readonly && action) {
+                  <td>
+                    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="context(product, { index })"></ng-container>
+                  </td>
+                }
+                @if (item) {
+                  @for (column of columns; track $index) {
+                    <td>
+                      <ng-container class="w-full" [ngTemplateOutlet]="item" [ngTemplateOutletContext]="context(product, { index, column })"></ng-container>
+                    </td>
+                  }
+                } @else {
+                  @for (column of columns; track $index) {
+                    <td class="text-{{column.aling}}">{{ product[column.key] }}</td>
+                  }
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <div class="grid justify-center">
+              @for (product of items; track product.id; let index = $index) {
+                <div class="col-12 grid">
+                  @for (column of columns; track $index) {
+                    <div class="col-12">
+                      <div class="grid items-center">
+                        @if (item) {
+                          <div class="col-fixed">
+                            <span class="font-bold">{{ column.label }}: </span>
+                          </div>
+                          <div class="col text-right justify-end">
+                            <ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="context(product, { index, column })"></ng-container>
+                          </div>
+                        } @else {
+                          <div class="col-fixed">
+                            <span class="font-bold">{{ column.label }}: </span>
+                          </div>
+                          <div class="col justify-end text-right">
+                            {{ product[column.key] }}
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                  @if (!readonly && action) {
+                    <div class="col-12 flex justify-center">
+                      <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="context(product, { index })"></ng-container>
+                    </div>
+                  }
+                </div>
+                <div class="col-12">
+                  <p-divider></p-divider>
+                </div>
+              }
+          </div>
+        }
+      }
+      </div>
+    }
+  </div>
+  <pagination-component [mediaQuery]="informacion.mediaQuery" [rows]="rows" [total]="total" (changePage)="page($event)" />
+</div>
