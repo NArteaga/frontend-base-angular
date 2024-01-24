@@ -93,7 +93,6 @@ export class RolPage {
   }
 
   async save(row: any) {
-    console.log(row)
     const { result, error, type } = await this.rolService.save(row)
     const response = result || error
     if (type === 'error') {

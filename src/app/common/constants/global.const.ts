@@ -3,6 +3,14 @@ export const tipoBitacora = [
   { name: 'CERRADO', code: 'CERRADO' }
 ]
 
+export const MatchMediaQuery = {
+  xs: `(min-width: 0px) and (max-width: 575)`,
+  sm: `(min-width: 576px) and (max-width: 767)`,
+  md: `(min-width: 768px) and (max-width: 991)`,
+  lg: `(min-width: 992px) and (max-width: 1199)`,
+  xl: `(min-width: 1200px)`
+}
+
 export const estadoTipoBitacora: any = {
   'SEGUIMIENTO': {
     icon: 'pi pi-clock',

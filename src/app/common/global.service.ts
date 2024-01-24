@@ -25,6 +25,12 @@ export class GlobalService {
     return { form, state }
   }
 
+  queryList(min: string, max: string) {
+    const [minWidth] = min.split(' and ')
+    const [_, maxWidth] = max.split(' and ')
+    if (!maxWidth) return minWidth
+    return `${minWidth} and ${maxWidth}`
+  }
 
   logout(): void {
     const theme = this.storage.local.getItem('theme')

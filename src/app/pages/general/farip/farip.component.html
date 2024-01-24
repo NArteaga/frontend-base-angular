@@ -1,0 +1,21 @@
+<content-modal
+  [documents]="documents"
+  [permisos]="permisos"
+  (add)="open.modify = true"
+  (refresh)="refresh()"
+  (download)="download($event)"
+></content-modal>
+@if (open.modify) {
+  <p-dialog
+    header="Adicionar nuevo Documento"
+    [(visible)]="open.modify"
+    [modal]="true"
+    [responsive]="false"
+    [style]="{width: '600px', maxWidth: '100%'}"
+    [draggable]="false"
+    [maximizable]="true"
+    (visibleChange)="close()"
+  >
+    <app-modal (cancel)="close()" (save)="save($event)" type="farip"></app-modal>
+  </p-dialog>
+}

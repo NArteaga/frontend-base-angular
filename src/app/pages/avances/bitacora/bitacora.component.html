@@ -12,9 +12,11 @@
         [disabled]="informacion.loading"
       ></p-button>
     </div>
-    <div class="col">
-      <p-button icon="pi pi-plus" (click)="informacion.item = null; informacion.open.modify = true"></p-button>
-    </div>
+    @if (this.informacion.permisos.includes("CREAR")) {
+      <div class="col">
+        <p-button icon="pi pi-plus" (click)="informacion.item = null; informacion.open.modify = true"></p-button>
+      </div>
+    }
   </div>
 </div>
 @if((['xs', 'sm'].includes(informacion.mediaQuery) && informacion.open.filter) || !['xs', 'sm'].includes(informacion.mediaQuery)) {
@@ -58,7 +60,7 @@
     @for (bitacora of informacion.bitacoras; track $index) {
       <div class="col-12">
         <div class="flex flex-col lg:flex-row lg:align-items-start gap-4">
-          <img class="w-9 sm:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round max-w-[300px]" [src]="bitacora.adjunto.path" alt="imagen bitacora" max/>
+          <img class="w-9 sm:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round max-w-[250px]" [src]="bitacora.adjunto.path" alt="imagen bitacora" max/>
           <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
             <div class="flex flex-column align-items-center sm:align-items-start">
               <div class="text-xl font-bold text-900 text-center pb-3">{{ bitacora.nombre }}</div>

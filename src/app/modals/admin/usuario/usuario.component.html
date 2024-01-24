@@ -13,15 +13,15 @@
   </div>
   <div class="col-12 md:col-6">
       <label for="unidad" class="required font-bold">Unidad</label>
-      <p-dropdown id="unidad" [options]="unidades" [showClear]="true" styleClass="w-full" formControlName="idUnidad" styleClass="max-w-full"></p-dropdown>
-      @if (form.getError('required', 'idUnidad') && form.value.idUnidad !== null) {
+      <p-dropdown id="unidad" [options]="unidades" [filter]="true" filterBy="label" optionLabel="label" optionValue="value" [showClear]="true" styleClass="w-full" formControlName="idUnidad" styleClass="max-w-full" panelStyleClass="fixed"></p-dropdown>
+      @if (form.getError('required', 'idUnidad')) {
         <small id="unidad-help">El campo de la unidad es requerido.</small>
       }
   </div>
   <div class="col-12 md:col-6">
       <label for="rol" class="required font-bold">Rol</label>
-      <p-dropdown id="rol" [options]="roles" [showClear]="true" styleClass="w-full" formControlName="idRol"></p-dropdown>
-      @if (form.getError('required', 'idRol') && form.value.idRol !== null) {
+      <p-dropdown id="rol" [options]="roles" [showClear]="true" [filter]="true" filterBy="label" optionLabel="label" optionValue="value"  styleClass="w-full" formControlName="idRol" panelStyleClass="fixed"></p-dropdown>
+      @if (form.getError('required', 'idRol')) {
         <small id="rol-help">El campo del rol es requerido.</small>
       }
   </div>

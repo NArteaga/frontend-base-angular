@@ -6,13 +6,28 @@
       <div class="pb-3">
         <p-tag [icon]="informacion.estados[value.estado].icon" [value]="value.estado" [severity]="informacion.estados[value.estado].color"></p-tag>
       </div>
+      <div class="pb-3">
+        <p-inplace #inplace>
+          <ng-template pTemplate="display">
+              <span>Leer la Descripción</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+              <span class="text-justify" (click)="inplace.deactivate()">
+                {{ value.descripcion }}
+              </span>
+          </ng-template>
+        </p-inplace>
+      </div>
+      <div>
+        <p-button icon="pi pi-history" severity="info" (click)="refresh()" styleClass="text-white mr-2"></p-button>
+      </div>
     </div>
   </div>
 </div>
 <div class="pt-4">
   <p-timeline [value]="detalles">
     <ng-template pTemplate="marker" let-detalle>
-      @if (detalle.type === 'create') {
+      @if (detalle.type === 'create' && this.informacion.permisos.includes('CREAR')) {
         @if (informacion.event !== 'create') {
           <p-button icon="pi pi-plus" [rounded]="true" severity="success" (click)="changeEvent('create')" styleClass="text-white mr-2"></p-button>
         }
@@ -24,7 +39,11 @@
       }
     </ng-template>
     <ng-template pTemplate="content" let-detalle>
-      @if (detalle.type === 'create' && informacion.event === 'create' && value.estado === 'SEGUIMIENTO') {
+      @if (
+        detalle.type === 'create' &&
+        informacion.event === 'create' &&
+        value.estado === 'SEGUIMIENTO'
+      ) {
           <p-card styleClass="mb-4 shadow-5 fadeinright animation-duration-500">
             <form [formGroup]="form">
               <div class="grid" #panelCreated>
@@ -85,7 +104,7 @@
                   <label for="descripcion" class="required font-bold">Descripción</label>
                   <textarea rows="5" pInputTextarea id="descripcion" class="w-full" formControlName="descripcion"></textarea>
                   @if (form.getError('required', 'descripcion') && form.value.descripcion !== null) {
-                    <small id="palabraClave-help">El campo de descripcion es requerido.</small>
+                    <small id="descripcion-help">El campo de descripcion es requerido.</small>
                   }
                 </div>
                 <div class="col-12 p-fluid">
@@ -149,7 +168,11 @@
             </form>
           </p-card>
       }
-      @if (detalle.type === 'update' && informacion.event === 'update' && value.estado === 'SEGUIMIENTO') {
+      @if (
+        detalle.type === 'update' &&
+        informacion.event === 'update' &&
+        value.estado === 'SEGUIMIENTO'
+      ) {
           <p-card styleClass="mb-4 shadow-5 fadeinright animation-duration-500">
             <form [formGroup]="form">
                 <div class="grid" #panelUpdate>
@@ -304,7 +327,11 @@
               </div>
             }
           </div>
-          @if (informacion.identificador === detalle.funcionario?.id && value.estado === 'SEGUIMIENTO') {
+          @if (
+            informacion.identificador === detalle.funcionario?.id &&
+            value.estado === 'SEGUIMIENTO' &&
+            this.informacion.permisos.includes('EDITAR')
+          ) {
             <div class="p-fluid">
               <p-button label="Modificar contenido" icon="pi pi-pencil" [raised]="true" (click)="changeEvent('update', detalles.indexOf(detalle))" severity="warning"></p-button>
             </div>

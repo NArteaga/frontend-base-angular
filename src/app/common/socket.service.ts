@@ -32,7 +32,6 @@ export class SocketService {
     return new Observable<{ message: string, content: any }>
       ((observer) => {
         this.socket.on(channel, (data) => {
-          console.log(data)
           if (this.identifierUse.has(data.id)) return
           this.identifierUse.add(data.id)
           observer.next({ content: data.content, message: data.message })

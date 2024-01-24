@@ -17,6 +17,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { BlockUIModule } from 'primeng/blockui';
 import { DeferModule } from 'primeng/defer';
 import { StorageService } from '@common/storage.service';
+import { Router } from '@angular/router';
+import { InplaceModule } from 'primeng/inplace';
 
 @Component({
   selector: 'detalle-modal',
@@ -35,6 +37,7 @@ import { StorageService } from '@common/storage.service';
     ReactiveFormsModule,
     BlockUIModule,
     DeferModule,
+    InplaceModule
   ],
   providers: [ConfirmationService],
   templateUrl: './detalle.component.html',
@@ -53,7 +56,8 @@ export class DetalleModal implements OnInit {
     open: { adjunto: false, imagen: false },
     event: 'list',
     removeAdjunto: new Set(),
-    loading: false
+    loading: false,
+    permisos: new Array<string>()
   }
 
   item: { row: any, position: number, adjuntos: File[] } = { row: null, position: 0, adjuntos: [] }
@@ -71,11 +75,18 @@ export class DetalleModal implements OnInit {
     private confirmationService: ConfirmationService,
     private detalleBitacoraService: DetalleBitacoraService,
     private messageService: MessageService,
+    private router: Router
   ) {
+    const permiso = this.storage.local.getItem('permisos')
+    this.informacion.permisos = permiso[this.router.url].accion
     this.informacion.identificador = this.storage.local.getItem('usuario').id
-
   }
+
   async ngOnInit() {
+    await this.refresh()
+  }
+
+  async refresh() {
     const { result, error, type } = await this.detalleBitacoraService.findAll(this.value.id)
     const response = result || error
     if (type === 'error') {
@@ -87,13 +98,9 @@ export class DetalleModal implements OnInit {
       })
       return
     }
-    if (this.value.estado === 'SEGUIMIENTO')
+    if (this.value.estado === 'SEGUIMIENTO' && this.informacion.permisos.includes('CREAR'))
       this.detalles = [{type: 'create'}, ...response.datos.rows]
     else this.detalles = [...response.datos.rows]
-  }
-
-  initData() {
-    console.log('HOLA')
   }
 
   async fileUpload(event: any) {

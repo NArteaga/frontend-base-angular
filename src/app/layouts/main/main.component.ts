@@ -91,33 +91,6 @@ export class MainLayout implements OnInit, OnDestroy {
         this.mediaQuery = change[0].mqAlias
         this.global.setQuery(change[0].mqAlias)
       })
-    this.socketSubcription.push(
-      this.socket
-        .getLoginCorrecto()
-        .subscribe((informacion: any) => {
-          this.messageService.add({
-            severity:'success',
-            summary: 'Autentificación correcto',
-            detail: informacion.message,
-          })
-        })
-    )
-    this.socketSubcription.push(
-      this.socket
-        .getChannel('notify')
-        .subscribe((data: any) => {
-          this.notify = [{
-            title: data.content.nombre,
-            type: data.content.type,
-            description: data.content.descripcion
-          }, ...this.notify]
-          this.messageService.add({
-            severity:'info',
-            summary: 'Notificacion',
-            detail: data.message
-          })
-        })
-    )
     if (element)
       this.info = { title: element?.nombre, icon: element?.icon }
     else

@@ -9,6 +9,10 @@ import { UsuarioPage } from './pages/admin/usuario/usuario.component';
 import { MenuPage } from './pages/admin/menu/menu.component';
 import { HomePage } from './pages/home/home.component';
 import { RolPage } from './pages/admin/rol/rol.component';
+import { InstitucionPage } from './pages/general/institucion/institucion.component';
+import { AdministracionPage } from './pages/general/administracion/administracion.component';
+import { FaripPage } from './pages/general/farip/farip.component';
+import { ProyectoPage } from './pages/general/proyecto/proyecto.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +39,15 @@ export const routes: Routes = [
           { path: 'usuario', component: UsuarioPage },
           { path: 'rol', component: RolPage },
           { path: 'menu', component: MenuPage },
+        ]
+      },
+      {
+        path: 'general',
+        children: [
+          { path: 'administracion', component: AdministracionPage },
+          { path: 'farip', component: FaripPage },
+          { path: 'institucion', component: InstitucionPage },
+          { path: 'proyectos', component: ProyectoPage },
         ]
       },
       { path: '404', component: NotFoundPage },

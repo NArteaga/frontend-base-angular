@@ -33,37 +33,6 @@
       </ng-template>
       <ng-template pTemplate="end">
         <div class="grid">
-          @if (!['xs'].includes(mediaQuery)) {
-            <div class="col">
-              <p-overlayPanel #op>
-                <ng-template pTemplate="content">
-                  <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones" [value]="notify">
-                    <ng-template pTemplate="list" let-products>
-                      <div class="grid grid-nogutter">
-                        @for (item of products; track $index) {
-                          <div class="col-12">
-                            <span class="text-xl font-bold">{{ item.type }}: {{ item.title }}</span>
-                          </div>
-                          <div class="col-12">
-                            <span class="text-sm">{{ item.description }}</span>
-                          </div>
-                          <div class="col-12">
-                            <p-divider></p-divider>
-                          </div>
-                        }
-                      </div>
-                    </ng-template>
-                  </p-dataView>
-                </ng-template>
-              </p-overlayPanel>
-              <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [text]="true" severity="info" (click)="op.toggle($event)" styleClass="shadow-none"></p-button>
-              <ng-template #tooltipNotify>
-                <div class="flex align-items-center">
-                  <span>Notificaciones</span>
-                </div>
-              </ng-template>
-            </div>
-          }
           <div class="col">
             <p-button icon="pi pi-{{ theme }}" [pTooltip]="tooltipMode" tooltipPosition="bottom"  severity="secondary" [text]="true"  (click)="changeTheme()" styleClass="shadow-none"></p-button>
             <ng-template #tooltipMode>
@@ -99,34 +68,3 @@
     </div>
     </div>
 </div>
-@if (['xs'].includes(mediaQuery)) {
-  <div class="fixed bottom-2 right-2">
-    <p-overlayPanel #op>
-      <ng-template pTemplate="content">
-        <p-dataView #dv emptyMessage="No se encontraron nuevas notificaciones" [value]="notify">
-          <ng-template pTemplate="list" let-products>
-            <div class="grid grid-nogutter">
-              @for (item of products; track $index) {
-                <div class="col-12">
-                  <span class="text-base">{{ item.type }}: {{ item.title }}</span>
-                </div>
-                <div class="col-12">
-                  <span class="text-sm">{{ item.description }}</span>
-                </div>
-                <div class="col-12">
-                  <p-divider></p-divider>
-                </div>
-              }
-            </div>
-          </ng-template>
-        </p-dataView>
-      </ng-template>
-    </p-overlayPanel>
-    <p-button icon="pi pi-comments" [pTooltip]="tooltipNotify" tooltipPosition="bottom" [rounded]="true" severity="info" (click)="op.toggle($event)" styleClass="shadow-none"></p-button>
-    <ng-template #tooltipNotify>
-      <div class="flex align-items-center">
-        <span>Notificaciones</span>
-      </div>
-    </ng-template>
-  </div>
-}

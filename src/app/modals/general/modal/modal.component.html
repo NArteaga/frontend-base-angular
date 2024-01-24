@@ -1,0 +1,59 @@
+<form [formGroup]="form">
+  <div class="col-12">
+    <label for="nombre" class="required font-bold">Nombre</label>
+    <input id="nombre" type="text" pInputText class="w-full disabled-input" formControlName="nombre"/>
+    @if (form.getError('required', 'nombre') && form.value.nombre !== null) {
+      <small id="nombre-help">El campo del nombre es requerido.</small>
+    }
+  </div>
+  <div class="col-12 p-fluid">
+    <label for="path" class="required font-bold">Documento</label>
+    <p-fileUpload
+      mode="advanced"
+      chooseLabel="Seleccionar el ajuntos"
+      [showUploadButton]="false"
+      [showCancelButton]="false"
+      [customUpload]="true"
+      id="path"
+      (onSelect)="upload($event)"
+      styleClass="w-full"
+    >
+      <ng-template pTemplate="file">
+        <div></div>
+      </ng-template>
+      <ng-template pTemplate="content" let-files>
+        @if (files.length === 0) {
+          <div class="w-full text-center">
+            <i class="pi pi-download text-4xl w-full"></i>
+            <span class="w-full font-bold">Subir adjunto</span>
+          </div>
+        } @else {
+          @for (file of files; track $index) {
+            <div class="grid w-full p-2">
+              <div class="col-fixed flex items-center">
+                <i class="pi pi-file text-4xl w-full"></i>
+              </div>
+              <div class="col">
+                <div class="w-full flex flex-col justify-content-between align-items-start flex-1">
+                  <span class="w-full pb-2">{{ file.name }}</span>
+                  <p-tag [value]="fileSize(file.size)" severity="warning" styleClass="p-1"></p-tag>
+                  <div class="w-full p-fluid pt-2">
+                    <p-button icon="pi pi-trash" label="Eliminar" severity="danger" size="small" (click)="remove(files, $index)"></p-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </ng-template>
+    </p-fileUpload>
+  </div>
+  <div class="flex justify-end">
+    <div class="p-1">
+      <p-button label="Cancel" icon="pi pi-times" severity="danger" (click)="exit()"></p-button>
+    </div>
+    <div class="p-1">
+      <p-button label="Guarda" icon="pi pi-save" severity="success" (click)="submit()"></p-button>
+    </div>
+  </div>
+</form>

@@ -35,6 +35,7 @@
       filterBy="label"
       styleClass="w-full"
       formControlName="icon"
+      panelStyleClass="fixed"
     >
       <ng-template pTemplate="selectedItem" let-icon>
         @if(icon) {
@@ -57,7 +58,7 @@
   </div>
   <div class="col-12 md:col-5">
     <label for="tipo" class="required font-bold">Tipo</label>
-    <p-dropdown id="tipo" [options]="tipo" [showClear]="true" styleClass="w-full" formControlName="tipo"></p-dropdown>
+    <p-dropdown id="tipo" [options]="tipo" [showClear]="true" styleClass="w-full" formControlName="tipo" panelStyleClass="fixed"></p-dropdown>
     @if (form.getError('required', 'tipo') && form.value.icon !== null) {
       <small id="tipo-help">El campo del tipo es requerido.</small>
     }
@@ -65,7 +66,7 @@
   @if (this.form.value.tipo === 'MENU') {
     <div class="col-12">
       <label for="idAgrupador" class="required font-bold">Grupo de Menu</label>
-      <p-dropdown id="idAgrupador" [options]="grupo" [showClear]="true" styleClass="w-full" formControlName="idAgrupador"></p-dropdown>
+      <p-dropdown id="idAgrupador" [options]="grupo" [showClear]="true" styleClass="w-full" formControlName="idAgrupador" panelStyleClass="fixed"></p-dropdown>
       @if (form.getError('required', 'idAgrupador') && form.value.idAgrupador!== null) {
         <small id="idAgrupador-help">El campo del grupo de menu es requerido.</small>
       }

@@ -21,7 +21,7 @@ import { ChipsModule } from 'primeng/chips';
 import { BitacoraModal } from '@modals/avances/bitacora/bitacora.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DetalleModal } from '@modals/avances/bitacora/detalle/detalle.component';
-import { estadoTipoBitacora, rowSelect, tipoBitacora } from '@common/constants/global.const'
+import { estadoTipoBitacora, tipoBitacora } from '@common/constants/global.const'
 import { PaginationComponent } from '@components/pagination/pagination.component';
 
 @Component({
@@ -189,7 +189,7 @@ export class BitacoraPage {
   }
 
   cambiarEstado(bitacora: any) {
-    if (!this.informacion.permisos.includes('EDITAR')) return
+    if (!this.informacion.permisos.includes('EDITAR') && !this.informacion.permisos.includes('ADMIN')) return
     if (bitacora.estado !== 'SEGUIMIENTO' && !this.informacion.permisos.includes('ADMIN')) return
     this.informacion.estado = bitacora.estado
     this.confirmationService.confirm({

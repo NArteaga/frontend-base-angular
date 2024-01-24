@@ -1,0 +1,75 @@
+
+<div class="flex md:justify-content-end justify-center">
+  <div class="grid">
+    @if (!['xs', 'sm'].includes(mediaQuery)) {
+      <div class="col">
+        <p-button [icon]="visor.icon" (click)="changeVisor()"></p-button>
+      </div>
+    }
+    <div class="col">
+      <p-button icon="pi pi-history" (click)="reset()"></p-button>
+    </div>
+    @if (permisos.includes("CREAR")) {
+      <div class="col">
+        <p-button icon="pi pi-plus" (click)="create()"></p-button>
+      </div>
+    }
+  </div>
+</div>
+@if (!['xs', 'sm'].includes(mediaQuery) && this.visor.active) {
+  <div class="flex sm:flex-row flex-col">
+    <div class="p-fluid w-full">
+      <p-galleria
+        [value]="documents"
+        [containerStyle]="{ 'max-width': '100%' }"
+        [showItemNavigators]="true"
+        [showThumbnails]="false"
+        [activeIndex]="index"
+        (activeIndexChange)="change($event)"
+      >
+        <ng-template pTemplate="caption" let-item>
+          <span class="pr-2 font-bold text-white">{{ item.nombre }}</span>
+          <p-tag [value]="item.documento.tipo"></p-tag>
+        </ng-template>
+        <ng-template ng-template pTemplate="item" let-item>
+          @if (isType(item, 'pdf')) {
+            <ngx-doc-viewer
+              [url]="item.documento.path"
+              viewer="pdf"
+              style="width:100%;height:58vh;"
+            >
+            </ngx-doc-viewer>
+          }
+          @if (isType(item, 'image')) {
+            <div class="flex justify-center items-center bg-slate-950 w-full p-6">
+              <img [src]="item.documento.path" alt="{{ item.documento.nombre }}" class="max-w-full"/>
+            </div>
+          }
+          @if (isType(item, 'no-document')) {
+            <div class="flex justify-center items-center bg-black w-full p-6 h-[450px]">
+              <p-button label="Descargar Documento" icon="pi pi-file" severity="info" styleClass="text-white" (click)="downloadDocument(item)"></p-button>
+            </div>
+          }
+        </ng-template>
+      </p-galleria>
+    </div>
+  </div>
+} @else {
+  <div class="grid">
+    @for (document of documents; track $index) {
+      <div class="col-12 sm:col-6 md:col-4 lg:col-3" (click)="downloadDocument(document)">
+        <div class="border-1 surface-border border-round m-2 text-center py-5 px-0 sm:px-3 cursor-pointer card-height">
+          <div>
+            <i class="{{ detectIcon(document) }} text-2xl md:text-4xl"></i>
+          </div>
+          <div>
+            <span class="text-base font-[600] md:text-lg mb-1 break-words">{{ document.nombre }}</span>
+          </div>
+          <div>
+            <p-tag [value]="document.documento.tipo"></p-tag>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

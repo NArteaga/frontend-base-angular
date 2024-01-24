@@ -130,7 +130,6 @@ export class UsuarioPage implements OnInit {
   }
 
   async save(row: any) {
-    console.log(row)
     const { result, error, type } = await this.usuarioService.save(row)
     const response = result || error
     if (type === 'error') {

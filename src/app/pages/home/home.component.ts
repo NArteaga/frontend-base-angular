@@ -34,6 +34,11 @@ export class HomePage implements OnInit {
         breakpoint: '1000px',
         numVisible: 2,
         numScroll: 2
+    },
+    {
+      breakpoint: '600px',
+      numVisible: 1,
+      numScroll: 1
     }
   ];
   mediaQuery: string = '';

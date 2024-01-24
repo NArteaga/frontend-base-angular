@@ -50,7 +50,7 @@ export class MenuModal implements OnInit {
     this.form = new FormGroup({
       id: new FormControl(undefined),
       nombre: new FormControl<string | null>({ value: null, disabled: false }, [Validators.required]),
-      idAgrupador: new FormControl<string | null>({ value: null, disabled: false }, [Validators.required]),
+      idAgrupador: new FormControl<string | null>({ value: null, disabled: false }),
       ruta: new FormControl<string | null>({ value: null, disabled: false }, [Validators.required]),
       icon: new FormControl<string | null>({ value: null, disabled: false }, [Validators.required]),
       orden: new FormControl<number | null>({ value: null, disabled: false }, [Validators.required, Validators.min(1)]),

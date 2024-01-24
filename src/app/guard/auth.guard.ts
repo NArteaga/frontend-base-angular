@@ -26,6 +26,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
       logout();
       return false;
     }
+
     const permisos = storage.local.getItem('permisos');
     permisos['/app/404'] = ['VER']
     if (!permisos[state.url]) router.navigate(['/app/404']);

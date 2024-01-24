@@ -128,7 +128,6 @@ export class MenuPage implements OnInit {
   }
 
   async save(row: any) {
-    console.log(row)
     const { result, error, type } = await this.menuService.save(row)
     const response = result || error
     if (type === 'error') {

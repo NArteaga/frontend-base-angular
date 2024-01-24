@@ -91,7 +91,6 @@ export class RolModal {
     for (const menu of this.value.menus) {
       smenu[menu.tipo][menu.id] = menu
     }
-    console.log(smenu)
     return smenu
   }
 
@@ -119,7 +118,6 @@ export class RolModal {
     for (const menu of this.list.views)
       if (menu?.rolMenu?.accion?.length > 0)
         value.views[menu.id] = { accion: menu.rolMenu.accion }
-    console.log(value)
     this.global.loading(this.form, true)
     this.save.emit(value)
     this.global.loading(this.form, false)
