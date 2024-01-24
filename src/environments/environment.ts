@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
   baseUrl: {
-    api: 'http://localhost:3000/api',
-    socket: 'http://localhost:3200',
-    frontend: 'http://localhost:4200',
+    api: 'api',
+    socket: 'socket',
+    frontend: 'frontend',
   },
-  siteKey: '6LfVg0wpAAAAAC6fNGwNCQ6ebgwxk5ruyRtejnh8',
+  siteKey: 'sitekey',
   prefix: 'sisger'
 };
