@@ -13,6 +13,7 @@ import { InstitucionPage } from './pages/general/institucion/institucion.compone
 import { AdministracionPage } from './pages/general/administracion/administracion.component';
 import { FaripPage } from './pages/general/farip/farip.component';
 import { ProyectoPage } from './pages/general/proyecto/proyecto.component';
+import { IndexGeneralPage } from './pages/general/index/index.component';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,7 @@ export const routes: Routes = [
       },
       {
         path: 'general',
+        component: IndexGeneralPage,
         children: [
           { path: 'administracion', component: AdministracionPage },
           { path: 'farip', component: FaripPage },

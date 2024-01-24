@@ -6,7 +6,18 @@
         <input [id]="filter.control" type="text" (input)="eventFilter()" pInputText class="w-full" [formControlName]="filter.control" />
       }
       @if (filter.type === 'select') {
-        <p-dropdown [id]="filter.control" (onChange)="eventFilter()" [options]="filter.options" [showClear]="true" styleClass="w-full" [formControlName]="filter.control"></p-dropdown>
+        <p-dropdown
+          [id]="filter.control"
+          (onChange)="eventFilter()"
+          [options]="filter?.options"
+          [showClear]="true"
+          styleClass="w-full"
+          [filter]="true"
+          optionLabel="label"
+          optionValue="value"
+          filterBy="label"
+          [formControlName]="filter.control"
+        ></p-dropdown>
       }
       @if (filter.type === 'chip') {
         <p-chips [id]="filter.control" (ngModelChange)="eventFilter()" [formControlName]="filter.control" separator=","></p-chips>

@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TableModule } from 'primeng/table';
 import { Subscription, distinctUntilChanged } from 'rxjs';
+import { Filters, Column, Option } from '../../models/crud'
 
 @Component({
   selector: 'crudtable-component',
@@ -27,23 +28,10 @@ import { Subscription, distinctUntilChanged } from 'rxjs';
 })
 export class CrudtableComponent implements OnInit, OnDestroy {
 
-  @Input() filters: Array<{
-    label: string;
-    control: string;
-    option?: Array<{
-      label: string;
-      value: string;
-    }>;
-    style: string;
-    type: 'text' | 'chip' | 'select' | 'number';
-  }> | undefined;
-  @Input() columns: Array<{
-    label: string;
-    key: string;
-    aling: string
-  }> = []
+  @Input() filters: Array<Filters> | undefined;
+  @Input() columns: Array<Column> = []
   @Input() total: number = 0;
-  @Input() rows?: Array<{ label: number, value: number }> = [
+  @Input() rows?: Array<Option<number, number>> = [
     { label: 5, value: 5 },
     { label: 10, value: 10 },
     { label: 20, value: 20 },
@@ -52,7 +40,6 @@ export class CrudtableComponent implements OnInit, OnDestroy {
   @Input() items: Array<any> = []
   @Input() content!: TemplateRef<ElementRef>
   @Input() item!: TemplateRef<ElementRef>
-  // @Input() action!: TemplateRef<ElementRef>
   @Input() readonly?: boolean = false
 
   @ViewChild(PaginationComponent) pagination!: PaginationComponent

@@ -3,10 +3,11 @@ import { StorageService } from '@common/storage.service';
 import { ContentModal } from '@modals/general/content/content.component';
 import { ModalComponent } from '@modals/general/modal/modal.component';
 import { AdministracionService } from '@services/general/administracion.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-administracion',
@@ -15,8 +16,10 @@ import { Router } from '@angular/router';
     ContentModal,
     DialogModule,
     ModalComponent,
-    ButtonModule
+    ButtonModule,
+    ConfirmDialogModule
   ],
+  providers: [ConfirmationService],
   templateUrl: './administracion.component.html',
   styleUrl: './administracion.component.scss'
 })
@@ -24,12 +27,15 @@ export class AdministracionPage implements OnInit {
   @ViewChild(ContentModal) contentModal!: ContentModal
   documents: Array<any> = []
   permisos: Array<string> = []
-  open = { modify: false}
+  open = { modify: false }
+  document: any = null
+
   constructor (
     private administracionService: AdministracionService,
     private messageService: MessageService,
     private storage: StorageService,
     private router: Router,
+    private confirmationService: ConfirmationService,
   ) {
     const permiso = this.storage.local.getItem('permisos')
     this.permisos = permiso[this.router.url].accion
@@ -83,5 +89,27 @@ export class AdministracionPage implements OnInit {
     }
     this.open.modify = false
     await this.refresh()
+  }
+
+  edit(institucion: any) {
+    this.document = institucion
+    this.open.modify = true
+  }
+
+  add() {
+    this.document = null
+    this.open.modify = true
+  }
+
+  async delete(institucion: any) {
+    this.confirmationService.confirm({
+      header: '¿Esta seguro de eliminar el documento?',
+      message: `El documento "${institucion.nombre}" se eliminara, por favor confirme para proceder`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        await this.administracionService.deleteById(institucion.id)
+        await this.refresh()
+      },
+    })
   }
 }

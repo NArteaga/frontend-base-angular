@@ -73,6 +73,7 @@ export class BitacoraModal implements OnInit {
       this.files = [file]
     }
   }
+
   exit(): void {
     this.cancel.emit()
   }

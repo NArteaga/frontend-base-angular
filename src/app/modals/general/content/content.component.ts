@@ -7,6 +7,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
 import { GalleriaModule } from 'primeng/galleria';
+import { StorageService } from '@common/storage.service';
 
 @Component({
   selector: 'content-modal',
@@ -35,14 +36,19 @@ export class ContentModal {
     active: true
   }
 
+  user: string = this.storage.local.getItem('usuario').id
+
   @Input() permisos: Array<string> = [];
   @Input() documents: Array<any> = [];
   @Output() download: EventEmitter<any> = new EventEmitter();
   @Output() refresh: EventEmitter<any> = new EventEmitter();
   @Output() add: EventEmitter<any> = new EventEmitter();
+  @Output() edit: EventEmitter<any> = new EventEmitter();
+  @Output() delete: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private global: GlobalService,
+    private storage: StorageService
   ) { this.global.query$.subscribe(result => this.mediaQuery = result) }
 
   isType(document: any, type: string){
@@ -82,5 +88,13 @@ export class ContentModal {
 
   create() {
     this.add.emit()
+  }
+
+  edicion(item: any) {
+    this.edit.emit(item)
+  }
+
+  trash(item: any) {
+    this.delete.emit(item)
   }
 }

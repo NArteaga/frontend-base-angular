@@ -3,10 +3,11 @@ import { StorageService } from '@common/storage.service';
 import { ContentModal } from '@modals/general/content/content.component';
 import { ModalComponent } from '@modals/general/modal/modal.component';
 import { ProyectoService } from '@services/general/proyecto.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-proyecto',
@@ -15,8 +16,10 @@ import { Router } from '@angular/router';
     ContentModal,
     DialogModule,
     ModalComponent,
-    ButtonModule
+    ButtonModule,
+    ConfirmDialogModule
   ],
+  providers: [ConfirmationService],
   templateUrl: './proyecto.component.html',
   styleUrl: './proyecto.component.scss'
 })
@@ -25,12 +28,14 @@ export class ProyectoPage implements OnInit {
   documents: Array<any> = []
   permisos: Array<string> = []
   open = { modify: false }
+  document: any = null
 
   constructor (
     private proyectoService: ProyectoService,
     private messageService: MessageService,
     private storage: StorageService,
     private router: Router,
+    private confirmationService: ConfirmationService,
   ) {
     const permiso = this.storage.local.getItem('permisos')
     this.permisos = permiso[this.router.url].accion
@@ -84,5 +89,27 @@ export class ProyectoPage implements OnInit {
     }
     this.open.modify = false
     await this.refresh()
+  }
+
+  edit(institucion: any) {
+    this.document = institucion
+    this.open.modify = true
+  }
+
+  add() {
+    this.document = null
+    this.open.modify = true
+  }
+
+  async delete(institucion: any) {
+    this.confirmationService.confirm({
+      header: '¿Esta seguro de eliminar el documento?',
+      message: `El documento "${institucion.nombre}" se eliminara, por favor confirme para proceder`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        await this.proyectoService.deleteById(institucion.id)
+        await this.refresh()
+      },
+    })
   }
 }

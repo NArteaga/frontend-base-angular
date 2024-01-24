@@ -4,7 +4,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ChipsModule } from 'primeng/chips';
-
+import { Filters } from '../../models/crud'
 @Component({
   selector: 'filter-component',
   standalone: true,
@@ -20,16 +20,7 @@ import { ChipsModule } from 'primeng/chips';
 })
 export class FilterComponent implements OnInit {
 
-  @Input() filters: Array<{
-    label: string;
-    control: string;
-    options?: Array<{
-      label: string;
-      value: string;
-    }>;
-    style: string;
-    type: 'text' | 'chip' | 'select' | 'number';
-  }> | undefined;
+  @Input() filters: Array<Filters> | undefined;
 
   @Output() filter: EventEmitter<any> = new EventEmitter()
 

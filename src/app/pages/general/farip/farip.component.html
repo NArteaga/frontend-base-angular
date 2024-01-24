@@ -1,13 +1,15 @@
 <content-modal
   [documents]="documents"
   [permisos]="permisos"
-  (add)="open.modify = true"
+  (add)="add()"
   (refresh)="refresh()"
   (download)="download($event)"
+  (edit)="edit($event)"
+  (delete)="delete($event)"
 ></content-modal>
 @if (open.modify) {
   <p-dialog
-    header="Adicionar nuevo Documento"
+    header="{{ !document ? 'Adicionar' : 'Editar' }} Nuevo Documento"
     [(visible)]="open.modify"
     [modal]="true"
     [responsive]="false"
@@ -16,6 +18,21 @@
     [maximizable]="true"
     (visibleChange)="close()"
   >
-    <app-modal (cancel)="close()" (save)="save($event)" type="farip"></app-modal>
+    <app-modal (cancel)="close()" (save)="save($event)" type="institucion" [value]="document"></app-modal>
   </p-dialog>
 }
+<p-confirmDialog #cd>
+  <ng-template pTemplate="headless" let-message>
+    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+      <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+        <i class="pi pi-question text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+      <p class="mb-0">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+        <button pButton label="Cancelar" (click)="cd.reject()" class="p-button-outlined w-8rem p-button-danger"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

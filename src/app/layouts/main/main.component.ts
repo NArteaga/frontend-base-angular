@@ -14,8 +14,6 @@ import { StorageService } from '@common/storage.service';
 import { MediaChange, MediaObserver } from '@angular/flex-layout'
 import { Subscription, distinctUntilChanged } from 'rxjs';
 import { FieldsetModule } from 'primeng/fieldset';
-import { SocketService } from '@common/socket.service';
-import { MessageService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 
 @Component({
@@ -56,8 +54,6 @@ export class MainLayout implements OnInit, OnDestroy {
     private router: Router,
     private mediaObserver: MediaObserver,
     private global: GlobalService,
-    private socket: SocketService,
-    private messageService: MessageService
   ) {
     this.theme = this.storage.local.getItem('theme') === 'dark' ? 'moon' : 'sun';
   }
