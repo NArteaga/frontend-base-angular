@@ -82,6 +82,9 @@ export class UsuarioModal implements OnInit {
         detail: 'No se encontro pudo encontrar el usuario requerido',
         sticky: false,
       })
+      this.usuario = {}
+      this.form.reset()
+      return
     }
     this.action = true
     this.usuario = {
