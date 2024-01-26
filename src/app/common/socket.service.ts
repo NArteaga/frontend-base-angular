@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@env';
 import { Observable } from 'rxjs';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -9,13 +9,13 @@ import { StorageService } from './storage.service';
 })
 export class SocketService {
   identifierUse = new Set<string>()
-  private socket = io(environment.baseUrl.socket, {
+  /* private socket = io(environment.baseUrl.socket, {
     withCredentials: true
-  })
+  }) */
   private storage = inject(StorageService)
   constructor() { }
 
-  getLoginCorrecto() {
+  /*getLoginCorrecto() {
     const usuario = this.storage.local.getItem('username');
     return new Observable<{ message: string, content: any }>
       ((observer) => {
@@ -42,5 +42,5 @@ export class SocketService {
 
   setEmitter(channel: string, content: any) {
     this.socket.emit(channel, content)
-  }
+  } */
 }

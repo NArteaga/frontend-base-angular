@@ -40,7 +40,6 @@ export class MainLayout implements OnInit, OnDestroy {
   theme = 'sun'
   mediaSubcription!: Subscription
   selectSubcription!: Subscription
-  socketSubcription: Array<Subscription> = []
   mediaQuery: string = ''
   queryView = ['xs', 'sm', 'md', 'lg', 'xl']
   info = { title: '404', icon: '404' }
@@ -61,8 +60,6 @@ export class MainLayout implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaSubcription.unsubscribe()
     this.selectSubcription.unsubscribe()
-    for (const subscribe of this.socketSubcription)
-      subscribe.unsubscribe()
   }
 
   ngOnInit(): void {
