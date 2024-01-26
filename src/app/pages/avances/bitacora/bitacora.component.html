@@ -31,14 +31,15 @@
         id="palabraClave"
         (ngModelChange)="filterEvent()"
         formControlName="palabraClave"
+        inputId="palabraClave"
         (onAdd)="addNuevaPalabraClave($event)"
         separator=","
         oninput="event.target.value = event.target.value.toUpperCase()"
       ></p-chips>
     </div>
     <div class="col-12 md:col-4 lg:col-4 xl:col-4">
-      <label for="estado" class="font-bold">Estado de la Bitacora</label>
-      <p-dropdown (onChange)="filterEvent()" id="estado" [options]="informacion.tipo" optionLabel="name" optionValue="code" [showClear]="true" styleClass="w-full" formControlName="estado"></p-dropdown>
+      <span class="font-bold">Estado de la Bitacora</span>
+      <p-dropdown appendTo="body" (onChange)="filterEvent()" [options]="informacion.tipo" optionLabel="name" optionValue="code" [showClear]="true" styleClass="w-full" formControlName="estado"></p-dropdown>
     </div>
   </form>
 }
@@ -114,7 +115,7 @@
       <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
       <p class="mb-0">{{ message.message }}</p>
       <div class="w-full flex justify-center mt-4">
-        <p-dropdown #item [options]="informacion.tipo" optionLabel="name" optionValue="code"  [(ngModel)]="informacion.estado"></p-dropdown>
+        <p-dropdown #item [options]="informacion.tipo" optionLabel="name" optionValue="code"  [(ngModel)]="informacion.estado" appendTo="body"></p-dropdown>
       </div>
       <div class="flex align-items-center gap-2 mt-4">
         <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
@@ -129,7 +130,7 @@
     [(visible)]="informacion.open.modify"
     [modal]="true"
     [responsive]="false"
-    [style]="{width: '600px', maxWidth: '100%'}"
+    styleClass="w-[600px] max-w-full"
     [draggable]="false"
     [maximizable]="true"
     (visibleChange)="cancel()"
@@ -143,7 +144,7 @@
     [(visible)]="informacion.open.modal"
     [modal]="true"
     [responsive]="false"
-    [style]="{width: '600px', maxWidth: '100%'}"
+    styleClass="w-[600px] max-w-full"
     [draggable]="false"
     [maximizable]="true"
     (visibleChange)="cancel()"

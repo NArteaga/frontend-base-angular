@@ -14,8 +14,8 @@
     }
   </div>
   <div class="col-12 md:col-2">
-    <label for="orden" class="required font-bold">Orden</label>
-    <p-inputNumber inputId="integeronly" formControlName="orden"></p-inputNumber>
+    <label class="required font-bold">Orden</label>
+    <p-inputNumber inputId="orden" formControlName="orden"></p-inputNumber>
     @if (form.getError('required', 'orden') && form.value.orden !== null) {
       <small id="orden-help">El campo del orden es requerido.</small>
     }
@@ -24,7 +24,7 @@
     }
   </div>
   <div class="col-12 md:col-5">
-    <label for="icon" class="required font-bold">Icono</label>
+    <span class="required font-bold">Icono</span>
     <p-dropdown
       id="icon"
       [options]="optionIcon"
@@ -35,7 +35,7 @@
       filterBy="label"
       styleClass="w-full"
       formControlName="icon"
-      panelStyleClass="fixed"
+      appendTo="body"
     >
       <ng-template pTemplate="selectedItem" let-icon>
         @if(icon) {
@@ -43,6 +43,8 @@
               <i [class]="icon.value"></i>
               <div>{{ icon.label }}</div>
           </div>
+        } @else {
+          <div>Seleccione un icono</div>
         }
       </ng-template>
       <ng-template let-icon pTemplate="item">
@@ -57,16 +59,16 @@
     }
   </div>
   <div class="col-12 md:col-5">
-    <label for="tipo" class="required font-bold">Tipo</label>
-    <p-dropdown id="tipo" [options]="tipo" [showClear]="true" styleClass="w-full" formControlName="tipo" panelStyleClass="fixed"></p-dropdown>
+    <span class="required font-bold">Tipo</span>
+    <p-dropdown [options]="tipo" [showClear]="true" styleClass="w-full" formControlName="tipo" appendTo="body"></p-dropdown>
     @if (form.getError('required', 'tipo') && form.value.icon !== null) {
       <small id="tipo-help">El campo del tipo es requerido.</small>
     }
   </div>
   @if (this.form.value.tipo === 'MENU') {
     <div class="col-12">
-      <label for="idAgrupador" class="required font-bold">Grupo de Menu</label>
-      <p-dropdown id="idAgrupador" [options]="grupo" [showClear]="true" styleClass="w-full" formControlName="idAgrupador" panelStyleClass="fixed"></p-dropdown>
+      <span class="required font-bold">Grupo de Menu</span>
+      <p-dropdown [options]="grupo" [showClear]="true" styleClass="w-full" formControlName="idAgrupador" appendTo="body"></p-dropdown>
       @if (form.getError('required', 'idAgrupador') && form.value.idAgrupador!== null) {
         <small id="idAgrupador-help">El campo del grupo de menu es requerido.</small>
       }

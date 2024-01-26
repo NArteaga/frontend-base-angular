@@ -3,6 +3,7 @@ export interface Filters {
   control: string;
   type: 'text' | 'chip' | 'select' | 'number';
   style?: string;
+  inputUpper?: boolean;
   options?: Array<Option<any, any>>;
 }
 

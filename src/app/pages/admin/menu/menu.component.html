@@ -65,7 +65,7 @@
     header="{{ select? 'Editar' : 'Nuevo' }} Menu"
     [(visible)]="open.modify"
     [modal]="true"
-    [style]="{width: '600px', maxWidth: '100%'}"
+    styleClass="w-[600px] max-w-full"
     [draggable]="false"
     [maximizable]="true"
     (visibleChange)="cancel()"

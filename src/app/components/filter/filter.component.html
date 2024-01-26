@@ -1,13 +1,20 @@
 <form [formGroup]="form" class="grid">
   @for (filter of filters; track $index)  {
     <div class="{{filter.style}} p-fluid">
-      <label [for]="filter.control" class="font-bold">{{ filter.label }}</label>
       @if (filter.type === 'text') {
-        <input [id]="filter.control" type="text" (input)="eventFilter()" pInputText class="w-full" [formControlName]="filter.control" />
+        <label [for]="filter.control" class="font-bold">{{ filter.label }}</label>
+        <input
+          [id]="filter.control"
+          type="text"
+          (input)="eventFilter()"
+          pInputText
+          class="w-full"
+          [formControlName]="filter.control"
+          autocomplete="off"/>
       }
       @if (filter.type === 'select') {
+        <span class="font-bold">{{ filter.label }}</span>
         <p-dropdown
-          [id]="filter.control"
           (onChange)="eventFilter()"
           [options]="filter?.options"
           [showClear]="true"
@@ -16,14 +23,17 @@
           optionLabel="label"
           optionValue="value"
           filterBy="label"
+          appendTo="body"
           [formControlName]="filter.control"
         ></p-dropdown>
       }
       @if (filter.type === 'chip') {
-        <p-chips [id]="filter.control" (ngModelChange)="eventFilter()" [formControlName]="filter.control" separator=","></p-chips>
+        <label [for]="filter.control" class="font-bold">{{ filter.label }}</label>
+        <p-chips (ngModelChange)="eventFilter()" [inputId]="filter.control" [formControlName]="filter.control" separator=","></p-chips>
       }
       @if (filter.type === 'number') {
-        <p-inputNumber inputId="integeronly" (onInput)="eventFilter()" [formControlName]="filter.control"></p-inputNumber>
+        <label [for]="filter.control" class="font-bold">{{ filter.label }}</label>
+        <p-inputNumber [inputId]="filter.control" (onInput)="eventFilter()" [formControlName]="filter.control"></p-inputNumber>
       }
     </div>
   }

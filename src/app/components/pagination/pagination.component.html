@@ -3,7 +3,7 @@
     <div class="grid">
       <div class="col-12 flex justify-center items-center">
         <span class="mx-1 text-color pr-3">Filas por pagina: </span>
-        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)"></p-dropdown>
+        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)" appendTo="body" autocomplete="off"></p-dropdown>
       </div>
       <div class="col-12">
         <p-paginator
@@ -26,7 +26,7 @@
         <span class="mx-1 text-color">Filas por pagina: </span>
       </div>
       <div class="pr-3">
-        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)"></p-dropdown>
+        <p-dropdown [options]="rows" [(ngModel)]="limit" (onChange)="reset($event)" appendTo="body" autocomplete="off"></p-dropdown>
       </div>
       <div class="pr-3">
         <p-paginator
