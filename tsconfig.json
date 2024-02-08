@@ -29,7 +29,7 @@
       "@services/*": ["./src/app/services/*"],
       "@common/*": ["./src/app/common/*"],
       "@env": ["./src/environments/environment.ts"],
-      "@models": ["./src/app/models/*"],
+      "@models/*": ["./src/app/models/*"],
     }
   },
   "angularCompilerOptions": {

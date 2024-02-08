@@ -24,17 +24,17 @@
       {{ row.ruta }}
     }
     @if(column?.key === 'tipo') {
-      <div class="flex justify-center">
+      <div class="flex lg:justify-center justify-end">
         <p-chip [label]="row.tipo" icon="pi pi-briefcase" styleClass="bg-[var(--blue-400)] text-white"></p-chip>
       </div>
     }
     @if(column?.key === 'icono') {
-      <div class="flex justify-center">
+      <div class="flex lg:justify-center justify-end">
         <i class="{{ row.icon }}" class="text-2xl"></i>
       </div>
     }
     @if(column?.key === 'estado') {
-      <div class="flex justify-center" pRipple>
+      <div class="flex lg:justify-center justify-end" pRipple>
         <p-chip
           [label]="row.estado"
           icon="pi {{ row.estado === 'ACTIVO' ? 'pi-verified' : 'pi-times-circle' }}"

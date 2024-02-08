@@ -29,8 +29,9 @@ import { Filters, Column, Option } from '../../models/crud'
 export class CrudtableComponent implements OnInit, OnDestroy {
 
   @Input() filters: Array<Filters> | undefined;
-  @Input() columns: Array<Column> = []
+  @Input() columns?: Array<Column> = []
   @Input() total: number = 0;
+  @Input() viewAdd: boolean = true;
   @Input() rows?: Array<Option<number, number>> = [
     { label: 5, value: 5 },
     { label: 10, value: 10 },

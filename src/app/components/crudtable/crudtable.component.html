@@ -17,9 +17,11 @@
           [disabled]="informacion.loading"
         ></p-button>
       </div>
-      <div class="col">
-        <p-button icon="pi pi-plus" (click)="addRegister()"></p-button>
-      </div>
+      @if (viewAdd) {
+        <div class="col">
+          <p-button icon="pi pi-plus" (click)="addRegister()"></p-button>
+        </div>
+      }
     </div>
   </div>
   @if(

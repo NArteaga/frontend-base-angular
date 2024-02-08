@@ -104,8 +104,8 @@ export class MainLayout implements OnInit, OnDestroy {
     this.info = { title: node.label, icon: node.icon }
   }
 
-  logout(): void {
-    this.global.logout()
+  async logout() {
+    await this.global.logout()
     this.router.navigate(['/login'])
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { StorageService } from './storage.service';
 import { BehaviorSubject } from 'rxjs';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 export class GlobalService {
   private query = new BehaviorSubject('')
   private storage = inject(StorageService)
+  private http = inject(HttpService)
   private select = new BehaviorSubject({ title: '', icon: '' })
   select$ = this.select.asObservable()
   query$ = this.query.asObservable()
@@ -32,10 +34,21 @@ export class GlobalService {
     return `${minWidth} and ${maxWidth}`
   }
 
-  logout(): void {
+  async logout() {
     const theme = this.storage.local.getItem('theme')
-    this.storage.local.clear()
-    this.storage.session.clear()
-    this.storage.local.setItem('theme', theme)
+    const token = this.storage.local.getItem('token')
+    if (!token) return
+    const { type } = await this.http.execute({
+      method: 'GET',
+      url: `/auth/logout`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (type === 'success') {
+      this.storage.local.clear()
+      this.storage.session.clear()
+      this.storage.local.setItem('theme', theme)
+    }
   }
 }

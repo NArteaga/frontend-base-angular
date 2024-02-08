@@ -52,8 +52,8 @@ export class ContentModal {
   ) { this.global.query$.subscribe(result => this.mediaQuery = result) }
 
   isType(document: any, type: string){
-    if (document.documento.tipo === 'pdf') return type === 'pdf'
-    if (document.documento.mime.startsWith('image/')) return type === 'image'
+    if (document.tipo === 'pdf') return type === 'pdf'
+    if (document.mime.startsWith('image/')) return type === 'image'
     return !['pdf', 'image'].includes(type)
   }
 

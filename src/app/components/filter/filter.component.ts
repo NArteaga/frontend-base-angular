@@ -41,4 +41,12 @@ export class FilterComponent implements OnInit {
         filter[key] = this.form.value[key]
     this.filter.emit(filter)
   }
+
+  addNuevaPalabraClave(event: any) {
+    if (!Array.isArray(this.form.value.palabraClave)) return
+    const contenido = [...this.form.value.palabraClave]
+    contenido.splice(-1, 1)
+    const nuevaPalabra = event.value.toUpperCase()
+    this.form.patchValue({ palabraClave: [...contenido, nuevaPalabra] })
+  }
 }
