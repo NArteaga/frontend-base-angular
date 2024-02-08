@@ -1,8 +1,14 @@
 <p-toolbar styleClass="rounded-none px-4 py-2 bg-transparent border-0">
   <div class="p-toolbar-group-start">
-    <img src="assets/img/logoFNDR.png" height="50" alt="logo FNDR" />
+    <div class="flex gap-x-2">
+      <div class="flex items-center py-0 cursor-pointer">
+        <img src="assets/img/logoFNDR.png" height="50" alt="logo FNDR" />
+      </div>
+    </div>
   </div>
   <div class="p-toolbar-group-end">
-    <p-button icon="pi pi-{{ theme }}" [rounded]="true" [raised]="true" severity="secondary" size="small" (click)="changeTheme()"></p-button>
+    <div class="flex gap-x-2 items-center">
+      <p-button icon="pi pi-{{ theme }}" [rounded]="true" [raised]="true" severity="secondary" size="small" (click)="changeTheme()"></p-button>
+    </div>
   </div>
 </p-toolbar>

@@ -62,7 +62,7 @@ export class MainLayout implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaSubcription.unsubscribe()
     this.selectSubcription.unsubscribe()
-    this.timer
+    clearInterval(this.timer)
   }
 
   ngOnInit(): void {
