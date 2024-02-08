@@ -15,6 +15,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout'
 import { Subscription, distinctUntilChanged } from 'rxjs';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DividerModule } from 'primeng/divider';
+import { LoginService } from '@services/login/login.service';
 
 @Component({
   selector: 'layout-main',
@@ -44,7 +45,7 @@ export class MainLayout implements OnInit, OnDestroy {
   queryView = ['xs', 'sm', 'md', 'lg', 'xl']
   info = { title: '404', icon: '404' }
   notify: Array<any> = []
-
+  timer: any
   year = new Date().getFullYear()
 
   constructor(
@@ -53,6 +54,7 @@ export class MainLayout implements OnInit, OnDestroy {
     private router: Router,
     private mediaObserver: MediaObserver,
     private global: GlobalService,
+    private auth: LoginService
   ) {
     this.theme = this.storage.local.getItem('theme') === 'dark' ? 'moon' : 'sun';
   }
@@ -60,6 +62,7 @@ export class MainLayout implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaSubcription.unsubscribe()
     this.selectSubcription.unsubscribe()
+    this.timer
   }
 
   ngOnInit(): void {
@@ -88,6 +91,11 @@ export class MainLayout implements OnInit, OnDestroy {
       this.info = { title: element?.nombre, icon: element?.icon }
     else
       this.info = { title: '404', icon: 'pi pi-spin pi-globe' }
+    this.timer = setInterval(async () => {
+      const { type } = await this.auth.verificar()
+      if (type === 'error')
+        await this.logout();
+    }, 5000)
   }
 
   toggleSidebar(): void {
@@ -106,6 +114,6 @@ export class MainLayout implements OnInit, OnDestroy {
 
   async logout() {
     await this.global.logout()
-    this.router.navigate(['/login'])
+    this.router.navigate(['/auth/login'])
   }
 }
