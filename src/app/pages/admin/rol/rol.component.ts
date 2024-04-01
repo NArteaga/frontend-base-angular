@@ -111,8 +111,8 @@ export class RolPage {
 
   changeEstado(row: any) {
     this.confirmationService.confirm({
-      header: '¿Esta seguro de cambiar el estado del menu?',
-      message: `El menu "${row.nombre}" se cambiara el estado ${ row.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO' }, por favor confirme para proceder`,
+      header: '¿Esta seguro de cambiar el estado del rol?',
+      message: `El rol "${row.nombre}" se cambiara el estado ${ row.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO' }, por favor confirme para proceder`,
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         const select = { id: row.id, estado: row.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO' }
