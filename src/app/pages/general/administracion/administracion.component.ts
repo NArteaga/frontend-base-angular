@@ -29,6 +29,7 @@ export class AdministracionPage implements OnInit {
   permisos: Array<string> = []
   open = { modify: false }
   document: any = null
+  loading: boolean = false
 
   constructor (
     private administracionService: AdministracionService,
@@ -76,8 +77,10 @@ export class AdministracionPage implements OnInit {
   }
 
   async save(administracion: any) {
+    this.loading = true
     const { result, error, type } = await this.administracionService.save(administracion)
     const response = result || error
+    this.loading = false
     if (type === 'error') {
       this.messageService.add({
         severity: 'error',

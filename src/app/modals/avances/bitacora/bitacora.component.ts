@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext'
@@ -29,8 +29,8 @@ export class BitacoraModal implements OnInit {
   title: 'Nueva' | 'Editar' = 'Nueva'
   image: { file: string, name: string } = { file: '', name: '' }
   images: any[] = []
-  loading: boolean = false
   changeImage: boolean = false
+  loading: boolean = false
   @Input() value: any = null
   @Output() cancel: EventEmitter<any> = new EventEmitter()
   @Output() save: EventEmitter<any> = new EventEmitter()
@@ -56,6 +56,7 @@ export class BitacoraModal implements OnInit {
       this.form.patchValue(this.value)
     }
   }
+
   async ngOnInit() {
     this.loading = false
     this.image = { file: '', name: '' }

@@ -18,7 +18,7 @@
     [maximizable]="true"
     (visibleChange)="close()"
   >
-    <app-modal (cancel)="close()" (save)="save($event)" type="institucion" [value]="document"></app-modal>
+    <app-modal (cancel)="close()" (save)="save($event)" type="institucion" [value]="document" [loading]="loading"></app-modal>
   </p-dialog>
 }
 <p-confirmDialog #cd>

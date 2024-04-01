@@ -29,6 +29,7 @@ export class FaripPage implements OnInit {
   permisos: Array<string> = []
   open = { modify: false }
   document: any = null
+  loading: boolean = false
 
   constructor (
     private faripService: FaripService,
@@ -76,8 +77,10 @@ export class FaripPage implements OnInit {
   }
 
   async save(farip: any) {
+    this.loading = true
     const { result, error, type } = await this.faripService.save(farip)
     const response = result || error
+    this.loading = false
     if (type === 'error') {
       this.messageService.add({
         severity: 'error',

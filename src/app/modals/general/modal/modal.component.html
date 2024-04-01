@@ -10,7 +10,7 @@
     <label for="path" class="required font-bold">Documento</label>
     <p-fileUpload
       mode="advanced"
-      chooseLabel="Seleccionar el ajuntos"
+      chooseLabel="Seleccionar adjunto"
       [showUploadButton]="false"
       [showCancelButton]="false"
       [customUpload]="true"
@@ -18,6 +18,7 @@
       [files]="files"
       (onSelect)="upload($event)"
       styleClass="w-full"
+      [disabled]="loading"
     >
       <ng-template pTemplate="file">
         <div></div>
@@ -51,10 +52,10 @@
   </div>
   <div class="flex justify-end">
     <div class="p-1">
-      <p-button label="Cancel" icon="pi pi-times" severity="danger" (click)="exit()"></p-button>
+      <p-button label="Cancelar" icon="pi pi-times" severity="danger" (click)="exit()" [loading]="loading"></p-button>
     </div>
     <div class="p-1">
-      <p-button label="Guarda" icon="pi pi-save" severity="success" (click)="submit()"></p-button>
+      <p-button label="Guarda" icon="pi pi-save" severity="success" (click)="submit()" [loading]="loading"></p-button>
     </div>
   </div>
 </form>

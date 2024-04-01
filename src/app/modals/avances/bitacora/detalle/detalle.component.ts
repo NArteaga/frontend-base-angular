@@ -1,5 +1,5 @@
 import { DetalleBitacoraService } from './../../../../services/avances/detalle-bitacora.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { estadoTipoBitacora } from '@common/constants/global.const';
 import { FileService } from '@common/file.service';
@@ -19,6 +19,7 @@ import { DeferModule } from 'primeng/defer';
 import { StorageService } from '@common/storage.service';
 import { Router } from '@angular/router';
 import { InplaceModule } from 'primeng/inplace';
+import { GlobalService } from '@common/global.service';
 
 @Component({
   selector: 'detalle-modal',
@@ -45,6 +46,7 @@ import { InplaceModule } from 'primeng/inplace';
 })
 export class DetalleModal implements OnInit {
   @Input() value: any = null
+  @Input() loading: boolean = false
   informacion = {
     estados: estadoTipoBitacora,
     changeImage: false,
@@ -72,6 +74,7 @@ export class DetalleModal implements OnInit {
   constructor(
     private fileService: FileService,
     private storage: StorageService,
+    private globalService: GlobalService,
     private confirmationService: ConfirmationService,
     private detalleBitacoraService: DetalleBitacoraService,
     private messageService: MessageService,
@@ -80,6 +83,11 @@ export class DetalleModal implements OnInit {
     const permiso = this.storage.local.getItem('permisos')
     this.informacion.permisos = permiso[this.router.url].accion
     this.informacion.identificador = this.storage.local.getItem('usuario').id
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['loading'])
+      this.globalService.loading(this.form, changes['loading'].currentValue)
   }
 
   async ngOnInit() {

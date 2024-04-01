@@ -1,10 +1,11 @@
-import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FileService } from '@common/file.service'
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { GlobalService } from '@common/global.service';
 
 @Component({
   selector: 'app-modal',
@@ -19,13 +20,14 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss'
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent implements OnChanges, OnInit {
   document: { file: string; name: string,  } = { file: '', name: '' };
   files: any[] = [];
   change: boolean = false;
 
   @Input() value?: any;
   @Input() type: string = ''
+  @Input() loading: boolean = false;
   @Output() cancel: EventEmitter<any> = new EventEmitter()
   @Output() save: EventEmitter<any> = new EventEmitter()
 
@@ -36,6 +38,7 @@ export class ModalComponent implements OnInit {
 
   constructor(
     private fileService: FileService,
+    private globalService: GlobalService,
   ) {}
 
   async ngOnInit() {
@@ -48,6 +51,11 @@ export class ModalComponent implements OnInit {
       const file = await this.fileService.urlToFile(this.value.documento.path, this.value.documento.nombre)
       this.files = [file]
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['loading'])
+      this.globalService.loading(this.form, changes['loading'].currentValue)
   }
 
   async upload(event: any) {

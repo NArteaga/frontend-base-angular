@@ -29,6 +29,7 @@ export class ProyectoPage implements OnInit {
   permisos: Array<string> = []
   open = { modify: false }
   document: any = null
+  loading: boolean = false
 
   constructor (
     private proyectoService: ProyectoService,
@@ -76,8 +77,10 @@ export class ProyectoPage implements OnInit {
   }
 
   async save(proyecto: any) {
+    this.loading = true
     const { result, error, type } = await this.proyectoService.save(proyecto)
     const response = result || error
+    this.loading = false
     if (type === 'error') {
       this.messageService.add({
         severity: 'error',

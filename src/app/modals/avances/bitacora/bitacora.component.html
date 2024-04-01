@@ -17,14 +17,14 @@
       (onAdd)="addNuevaPalabraClave($event)"
       oninput="event.target.value = event.target.value.toUpperCase()"
     ></p-chips>
-    @if (form.getError('required', 'palabraClave') && form.value.palabraClave !== null) {
+    @if (form.getError('required', 'palabraClave')) {
       <small id="palabraClave-help">El campo de palabras clave es requerido.</small>
     }
   </div>
   <div class="col-12 p-fluid">
     <label for="descripcion" class="required font-bold">Descripción</label>
     <textarea rows="5" pInputTextarea formControlName="descripcion" id="descripcion" class="w-full"></textarea>
-    @if (form.getError('required', 'descripcion') && form.value.descripcion !== null) {
+    @if (form.getError('required', 'descripcion')) {
       <small id="descripcion-help">El campo de la descripción es requerido.</small>
     }
   </div>
@@ -101,7 +101,7 @@
   </div>
   <div class="flex justify-end">
     <div class="p-1">
-      <p-button label="Cancel" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="exit()"></p-button>
+      <p-button label="Cancelar" icon="pi pi-times" severity="danger" [disabled]="loading" (click)="exit()"></p-button>
     </div>
     <div class="p-1">
       <p-button label="Guarda" icon="pi pi-save" severity="success" [disabled]="loading" (click)="submit()"></p-button>
