@@ -9,11 +9,10 @@
       <div class="pb-3">
         <p-inplace #inplace>
           <ng-template pTemplate="display">
-              <span>Leer la Descripción</span>
+            <span>Leer la Descripción</span>
           </ng-template>
           <ng-template pTemplate="content">
-              <span class="text-justify" (click)="inplace.deactivate()">
-                {{ value.descripcion }}
+              <span class="text-justify break-all" (click)="inplace.deactivate()" [innerText]="value.descripcion">
               </span>
           </ng-template>
         </p-inplace>
@@ -71,6 +70,7 @@
                       [showUploadButton]="false"
                       [showCancelButton]="false"
                       [customUpload]="true"
+                      [disabled]="loading"
                       (onSelect)="fileUpload($event)"
                       accept="image/*"
                       [maxFileSize]="105000000"
@@ -125,10 +125,12 @@
                       [showUploadButton]="false"
                       [showCancelButton]="false"
                       [customUpload]="true"
+                      [disabled]="loading"
                       id="path"
                       (onSelect)="upload($event)"
                       [multiple]="true"
                       styleClass="w-full"
+                      [disabled]="loading"
                     >
                       <ng-template pTemplate="file">
                         <div></div>
@@ -199,6 +201,7 @@
                         [showUploadButton]="false"
                         [showCancelButton]="false"
                         [customUpload]="true"
+                        [disabled]="loading"
                         (onSelect)="fileUpload($event)"
                         accept="image/*"
                         [maxFileSize]="105000000"
@@ -243,7 +246,8 @@
                           [onIcon]="'pi pi-times'"
                           offIcon="pi pi-file"
                           (onChange)="removeFile(adjunto)"
-
+                          styleClass="break-all"
+                          [disabled]="loading"
                         >
                         </p-toggleButton>
                       </div>
@@ -254,6 +258,7 @@
                       [label]="informacion.open.adjunto ? 'No adicionar nuevos adjuntos' : 'Adicionar adjuntos'"
                       (click)="informacion.open.adjunto = !informacion.open.adjunto"
                       [text]="true"
+                      styleClass="break-all"
                       [loading]="loading">
                     </p-button>
                   </div>
@@ -269,6 +274,7 @@
                         id="path"
                         [multiple]="true"
                         (onSelect)="upload($event)"
+                        [disabled]="loading"
                         styleClass="w-full"
                       >
                         <ng-template pTemplate="file">
@@ -292,7 +298,7 @@
                                       <span class="w-full">{{ file.name }}</span>
                                       <p-tag [value]="fileSize(file.size)" severity="warning"></p-tag>
                                       <div class="w-full p-fluid pt-2">
-                                        <p-button icon="pi pi-trash" label="Eliminar" severity="danger" size="small" (click)="remove($index, files)" [loading]="loading"></p-button>
+                                        <p-button icon="pi pi-trash" label="Eliminar" severity="danger" size="small" (click)="remove($index, files)" [loading]="this.informacion.loading"></p-button>
                                       </div>
                                     </div>
                                   </div>
@@ -323,11 +329,11 @@
           }
           <p class="text-sm m-0 p-card-subtitle">Fecha Creacion: {{ detalle.createdAt }}</p>
           <p class="text-sm m-0 p-card-subtitle">Fecha Ultima Actualización: {{ detalle.updatedAt }}</p>
-          <p class="text-justify">{{ detalle.descripcion }}</p>
+          <p class="text-justify break-all" [innerText]="detalle.descripcion"></p>
           <div class="grid">
             @for (adjunto of detalle.adjuntos; track $index) {
               <div class="col-fixed max-w-full">
-                <p-button [label]="adjunto.nombre" icon="pi pi-file" (click)="download(adjunto)" [loading]="loading"></p-button>
+                <p-button styleClass="break-all" [label]="adjunto.nombre" icon="pi pi-file" (click)="download(adjunto)" [loading]="loading"></p-button>
               </div>
             }
           </div>

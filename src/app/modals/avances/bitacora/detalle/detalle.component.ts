@@ -74,7 +74,6 @@ export class DetalleModal implements OnInit {
   constructor(
     private fileService: FileService,
     private storage: StorageService,
-    private globalService: GlobalService,
     private confirmationService: ConfirmationService,
     private detalleBitacoraService: DetalleBitacoraService,
     private messageService: MessageService,
@@ -83,11 +82,6 @@ export class DetalleModal implements OnInit {
     const permiso = this.storage.local.getItem('permisos')
     this.informacion.permisos = permiso[this.router.url].accion
     this.informacion.identificador = this.storage.local.getItem('usuario').id
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['loading'])
-      this.globalService.loading(this.form, changes['loading'].currentValue)
   }
 
   async ngOnInit() {
@@ -166,7 +160,7 @@ export class DetalleModal implements OnInit {
 
   async publicar() {
     if (!this.form.valid) return
-    this.informacion.loading = true
+    this.loadingEvent(true)
     const value: any = { ...this.form.value, idBitacora: this.value.id, estado: 'ACTIVO' }
     if (this.informacion.open.imagen && this.informacion.image) {
       const { error, result } = await this.fileService.sendFile(
@@ -174,11 +168,11 @@ export class DetalleModal implements OnInit {
         { file: this.informacion.image, name: this.informacion.nameImage }
       )
       if (error) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       if (!result?.datos?.id) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       value.idAdjunto = result.datos.id
@@ -189,7 +183,7 @@ export class DetalleModal implements OnInit {
         this.item.adjuntos
       )
       if (error) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       value.adjuntos = result.datos
@@ -203,17 +197,17 @@ export class DetalleModal implements OnInit {
         detail: response?.mensaje || response,
         sticky: true,
       })
-      this.informacion.loading = false
+      this.loadingEvent(false)
       return
     }
     this.addRow(response.datos)
-    this.informacion.loading = false
+    this.loadingEvent(false)
     this.informacion.event = 'list'
   }
 
   async actualizarPublicar() {
     if (!this.form.valid) return
-    this.informacion.loading = true
+    this.loadingEvent(true)
     const value: any = { ...this.form.value, idBitacora: this.value.id, estado: 'ACTIVO', id: this.item.row.id }
     if (this.informacion.open.adjunto && this.item.adjuntos.length > 0) {
       const { error, result } = await this.fileService.sendFiles(
@@ -221,7 +215,7 @@ export class DetalleModal implements OnInit {
         this.item.adjuntos
       )
       if (error) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       value.adjuntos = result.datos
@@ -235,11 +229,11 @@ export class DetalleModal implements OnInit {
         { file: this.informacion.image, name: this.informacion.nameImage }
       )
       if (error) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       if (!result?.datos?.id) {
-        this.informacion.loading = false
+        this.loadingEvent(false)
         return
       }
       value.idAdjunto = result.datos.id
@@ -253,14 +247,14 @@ export class DetalleModal implements OnInit {
         detail: response?.mensaje || response,
         sticky: true,
       })
-      this.informacion.loading = false
+      this.loadingEvent(false)
       return
     }
     const detalles = this.detalles
     detalles[this.item.position] = response.datos
     this.detalles = [...detalles]
     this.informacion.event = 'list'
-    this.informacion.loading = false
+    this.loadingEvent(false)
     this.item = { adjuntos: [], position: 0, row: null }
   }
 
@@ -276,6 +270,14 @@ export class DetalleModal implements OnInit {
     link.href = adjunto.path
     link.target = "_blank";
     link.click()
+  }
+
+  loadingEvent(state: boolean) {
+    this.loading = state
+    for (const key in this.form.controls) {
+      if (!state) this.form.get(key)?.enable()
+      else this.form.get(key)?.disable()
+    }
   }
 
   async changeEvent(event: 'create' | 'update' | 'list', position: number = 0) {

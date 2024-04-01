@@ -54,6 +54,7 @@ export class ModalComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
     if (changes['loading'])
       this.globalService.loading(this.form, changes['loading'].currentValue)
   }
@@ -80,10 +81,14 @@ export class ModalComponent implements OnChanges, OnInit {
     const value: any = { ...this.form.value }
     if (!this.change && !this.form.value.id) return
     if (this.change) {
+      this.loading = true
       let idDocument = ''
       const { error, result } = await this.fileService.sendFile(`/general/${this.type}/file`, this.document)
       if (error) return
-      if (!result?.datos?.id) return
+      if (!result?.datos?.id) {
+        this.loading = false
+        return
+      }
       idDocument = result.datos.id
       if (idDocument) value.idDocument = idDocument
     }

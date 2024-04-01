@@ -60,16 +60,16 @@
     </div>
     @for (bitacora of informacion.bitacoras; track $index) {
       <div class="col-12">
-        <div class="flex flex-col lg:flex-row lg:align-items-start gap-4">
-          <img class="w-9 sm:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round max-w-[250px]" [src]="bitacora.adjunto.path" alt="imagen bitacora" max/>
-          <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
-            <div class="flex flex-column align-items-center sm:align-items-start">
+        <div class="flex flex-col md:flex-row md:align-items-start gap-4">
+          <img class="w-9 md:w-25rem xl:w-20rem shadow-2 block xl:block mx-auto border-round max-w-[250px]" [src]="bitacora.adjunto.path" alt="imagen bitacora" max/>
+          <div class="flex flex-column md:flex-row justify-content-between align-items-center xl:align-items-start flex-1">
+            <div class="flex flex-column align-items-center md:align-items-start">
               <div class="text-xl font-bold text-900 text-center pb-3">{{ bitacora.nombre }}</div>
               <div class="pb-3">
                 <p-tag [icon]="informacion.estados[bitacora.estado].icon" [value]="bitacora.estado" [severity]="informacion.estados[bitacora.estado].color" (click)="cambiarEstado(bitacora)"></p-tag>
               </div>
               @if (!['xs'].includes(informacion.mediaQuery)) {
-                <p class="text-sm pb-3 truncate text-pretty text-justify h-15 hyphens-auto h-[100px] text-ellipsis">{{bitacora.descripcion}}</p>
+                <p class="text-sm pb-3 truncate text-pretty text-justify hyphens-auto max-h-[100px] text-ellipsis" [innerText]="bitacora.descripcion"></p>
               }
               <span class="font-semibold pb-3">Palabras Clave: </span>
               <div class="grid justify-center sm:justify-normal">
@@ -81,7 +81,7 @@
               </div>
             </div>
           </div>
-          <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 md:gap-2 justify-center">
+          <div class="flex md:flex-column align-items-center md:align-items-end gap-3 md:gap-2 justify-center">
             @if (informacion.permisos.includes('VER')) {
               <p-button icon="pi pi-eye" class="md:align-self-end mb-2 p-button-rounded" severity="info" (click)="selectDetalleBitacora(bitacora)"></p-button>
             }
