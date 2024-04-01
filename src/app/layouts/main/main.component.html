@@ -5,7 +5,7 @@
     </p-sidebar>
   }
   @if (sidebarOpen && ['lg', 'xl'].includes(mediaQuery)) {
-    <p-card styleClass="w-80 h-screen rounded-none fadeinleft animation-duration-300 sticky top-0 left-0">
+    <p-card styleClass="w-80 h-screen overflow-auto over rounded-none fadeinleft animation-duration-300 sticky top-0 left-0">
       <sidebar-component (selectNode)="changeContent($event)"/>
     </p-card>
   }
